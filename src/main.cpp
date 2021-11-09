@@ -2,7 +2,8 @@
 
 int main(int argc, char* argv[]) {
     Cpu cpu{};
-    INSTRUCTIONS[0x40](cpu);
+    cpu.b = 42;
+    INSTRUCTIONS[0x78](cpu);
 
-    return 0;
+    return cpu.a;
 }

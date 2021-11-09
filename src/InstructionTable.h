@@ -45,9 +45,9 @@ constexpr decltype(auto) GenerateImplementationFor() {
     Reg16 pair = ParseRegPair(opcode);
 
     if constexpr (BitMaskMatch("01DDDSSS", opcode))
-        return MovOpcode{0, 5, src, dst};
+        return MovOpcode{src, dst};
     else if constexpr (BitMaskMatch("00DDD110", opcode))
-        return MviOpcode{1, 7, dst};
+        return MviOpcode{dst};
     else
         return InvalidOpcode{};
 }

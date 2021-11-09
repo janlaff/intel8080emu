@@ -5,19 +5,14 @@
 
 #include "Cpu.h"
 
-struct Opcode {
-    size_t numDataBytes;
-    size_t numClockCycles;
-};
+struct InvalidOpcode {};
 
-struct InvalidOpcode : Opcode {};
-
-struct MovOpcode : Opcode {
+struct MovOpcode {
     Reg8 srcReg;
     Reg8 dstReg;
 };
 
-struct MviOpcode : Opcode {
+struct MviOpcode {
     Reg8 dstReg;
 };
 

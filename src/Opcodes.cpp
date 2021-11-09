@@ -11,5 +11,5 @@ void Execute(Cpu& cpu, MovOpcode opcode) {
 }
 
 void Execute(Cpu& cpu, MviOpcode opcode) {
-    // TODO
+    cpu.SetRegister(opcode.dstReg, cpu.LoadDataByte());
 }

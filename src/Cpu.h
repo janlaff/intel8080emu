@@ -31,7 +31,9 @@ public:
     void SetRegister(Reg8 reg, uint8_t value);
     void SetRegister(Reg16 reg, uint16_t value);
 
-private:
+    uint8_t LoadDataByte();
+
+//private:
     uint8_t a;
     uint8_t flags;
     uint8_t b;
