@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include "Instruction.h"
+#include "Opcodes.h"
 
 void Execute(Cpu& cpu, InvalidOpcode opcode) {
     throw std::runtime_error("Invalid opcode");

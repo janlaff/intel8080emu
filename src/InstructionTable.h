@@ -4,7 +4,7 @@
 #include <string_view>
 #include <functional>
 
-#include "Instruction.h"
+#include "Opcodes.h"
 
 constexpr Reg8 ParseDestinationReg(uint8_t opcode) {
     return static_cast<Reg8>((opcode & 0b00111000) >> 3);

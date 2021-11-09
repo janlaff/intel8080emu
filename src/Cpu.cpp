@@ -1,8 +1,8 @@
 #include "Cpu.h"
-#include "Instruction.h"
+#include "Opcodes.h"
 
 uint8_t Cpu::GetRegister(Reg8 reg) {
-    
+
 }
 
 uint16_t Cpu::GetRegister(Reg16 reg) {
