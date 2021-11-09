@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include <tuple>
+#include <string_view>
 
 #include "Instruction.h"
 
@@ -38,21 +38,21 @@ constexpr bool BitMaskMatch(std::string_view bitMask, uint8_t opcode) {
 }
 
 template<uint8_t opcode>
-constexpr auto GenerateInstructionFor() {
+constexpr auto GenerateImplementationFor() {
     Reg8 src = ParseSourceReg(opcode);
     Reg8 dst = ParseDestinationReg(opcode);
     Reg16 pair = ParseRegPair(opcode);
 
     if constexpr (BitMaskMatch("01DDDSSS", opcode))
-        return MovInstruction{src, dst};
+        return MovOpcode{0, 5, src, dst};
     else
-        return UnimplementedInstruction{};
+        return InvalidOpcode{};
 }
 
 template<uint8_t opcode>
 constexpr auto GenerateInstructionExecutorFor() {
     return [](Cpu& cpu) {
-        GenerateInstructionFor<opcode>().ExecuteOn(cpu);
+        Execute(cpu, GenerateImplementationFor<opcode>());
     };
 }
 

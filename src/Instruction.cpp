@@ -2,10 +2,10 @@
 
 #include "Instruction.h"
 
-void UnimplementedInstruction::ExecuteOn(Cpu &cpu) {
-    throw std::runtime_error{"Unimplemented instruction"};
+void Execute(Cpu& cpu, InvalidOpcode opcode) {
+    throw std::runtime_error("Invalid opcode");
 }
 
-void MovInstruction::ExecuteOn(Cpu &cpu) {
-    cpu.SetRegister(dst, cpu.GetRegister(src));
+void Execute(Cpu& cpu, MovOpcode opcode) {
+    cpu.SetRegister(opcode.dstReg, cpu.GetRegister(opcode.srcReg));
 }
