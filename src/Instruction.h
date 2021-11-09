@@ -17,5 +17,10 @@ struct MovOpcode : Opcode {
     Reg8 dstReg;
 };
 
+struct MviOpcode : Opcode {
+    Reg8 dstReg;
+};
+
 void Execute(Cpu& cpu, InvalidOpcode opcode);
 void Execute(Cpu& cpu, MovOpcode opcode);
+void Execute(Cpu& cpu, MviOpcode opcode);

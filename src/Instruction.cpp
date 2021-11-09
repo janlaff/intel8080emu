@@ -9,3 +9,7 @@ void Execute(Cpu& cpu, InvalidOpcode opcode) {
 void Execute(Cpu& cpu, MovOpcode opcode) {
     cpu.SetRegister(opcode.dstReg, cpu.GetRegister(opcode.srcReg));
 }
+
+void Execute(Cpu& cpu, MviOpcode opcode) {
+    // TODO
+}

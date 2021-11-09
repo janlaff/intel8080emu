@@ -1,7 +1,8 @@
 #include "InstructionTable.h"
 
 int main(int argc, char* argv[]) {
-    INSTRUCTION_TABLE.size();
+    Cpu cpu{};
+    INSTRUCTIONS[0x40](cpu);
 
     return 0;
 }
