@@ -23,7 +23,7 @@ constexpr bool BitMaskMatch(std::string_view bitMask, uint8_t opcode) {
 }
 
 template<uint8_t opcode>
-constexpr decltype(auto) GenerateImplementationFor() {
+constexpr decltype(auto) ResolveOpcode() {
     Reg8 src = ParseSourceReg(opcode);
     Reg8 dst = ParseDestinationReg(opcode);
     Reg16 dst16 = ParseRegPair(opcode);
@@ -41,16 +41,16 @@ constexpr decltype(auto) GenerateImplementationFor() {
 }
 
 template<uint8_t opcode>
-constexpr auto GenerateInstructionExecutorFor() {
+constexpr auto CreateOpcodeTableEntry() {
     return [](Cpu& cpu) {
-        Execute(cpu, GenerateImplementationFor<opcode>());
+        Execute(cpu, ResolveOpcode<opcode>());
     };
 }
 
-struct InstructionTable {
+struct OpcodeTable {
     using ExecuteFn = void(*)(Cpu&);
 
-    constexpr InstructionTable(std::initializer_list<ExecuteFn> instructions) {
+    constexpr OpcodeTable(std::initializer_list<ExecuteFn> instructions) {
         std::copy(instructions.begin(), instructions.end(), &data[0]);
     }
 
@@ -58,13 +58,13 @@ struct InstructionTable {
         return data[index];
     }
 
-    ExecuteFn data[0xff];
+    std::array<ExecuteFn, 0xff> data;
 };
 
 template<uint8_t ... opcodes>
-constexpr auto GenerateInstructionTableFor(std::integer_sequence<uint8_t, opcodes...>) {
-    return InstructionTable{GenerateInstructionExecutorFor<opcodes>()...};
+constexpr auto CreateOpcodeTable(std::integer_sequence<uint8_t, opcodes...>) {
+    return OpcodeTable{CreateOpcodeTableEntry<opcodes>()...};
 }
 
 constexpr auto ALL_OPCODES = std::make_integer_sequence<uint8_t, 0xff>{};
-constexpr auto INSTRUCTIONS = GenerateInstructionTableFor(ALL_OPCODES);
+constexpr auto INSTRUCTIONS = CreateOpcodeTable(ALL_OPCODES);
