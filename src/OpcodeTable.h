@@ -6,17 +6,17 @@
 #include "BitMask.h"
 
 struct OpcodeTable {
-    using ExecuteFn = void(*)(Cpu&);
+    using OpcodeImpl = void(*)(Cpu&);
 
-    constexpr OpcodeTable(std::initializer_list<ExecuteFn> entries) {
+    constexpr OpcodeTable(std::initializer_list<OpcodeImpl> entries) {
         std::copy(entries.begin(), entries.end(), &data[0]);
     }
 
-    constexpr ExecuteFn operator[](size_t index) const {
+    constexpr OpcodeImpl operator[](size_t index) const {
         return data[index];
     }
 
-    std::array<ExecuteFn, 0xff> data;
+    std::array<OpcodeImpl, 0xff> data;
 };
 
 template<uint8_t opcode>
@@ -38,7 +38,7 @@ constexpr decltype(auto) ResolveOpcode() {
 }
 
 template<uint8_t opcode>
-constexpr auto CreateOpcodeTableEntry() {
+constexpr OpcodeTable::OpcodeImpl CreateOpcodeEntry() {
     return [](Cpu& cpu) {
         Execute(cpu, ResolveOpcode<opcode>());
     };
@@ -46,7 +46,7 @@ constexpr auto CreateOpcodeTableEntry() {
 
 template<uint8_t ... opcodes>
 constexpr OpcodeTable CreateOpcodeTableImpl(std::integer_sequence<uint8_t, opcodes...>) {
-    return OpcodeTable{CreateOpcodeTableEntry<opcodes>()...};
+    return OpcodeTable{CreateOpcodeEntry<opcodes>()...};
 }
 
 constexpr OpcodeTable CreateOpcodeTable() {
