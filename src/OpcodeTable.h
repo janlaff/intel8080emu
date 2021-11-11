@@ -5,6 +5,20 @@
 #include "Opcodes.h"
 #include "BitMask.h"
 
+struct OpcodeTable {
+    using ExecuteFn = void(*)(Cpu&);
+
+    constexpr OpcodeTable(std::initializer_list<ExecuteFn> entries) {
+        std::copy(entries.begin(), entries.end(), &data[0]);
+    }
+
+    constexpr ExecuteFn operator[](size_t index) const {
+        return data[index];
+    }
+
+    std::array<ExecuteFn, 0xff> data;
+};
+
 template<uint8_t opcode>
 constexpr decltype(auto) ResolveOpcode() {
     Reg8 src = ParseSourceReg(opcode);
@@ -29,20 +43,6 @@ constexpr auto CreateOpcodeTableEntry() {
         Execute(cpu, ResolveOpcode<opcode>());
     };
 }
-
-struct OpcodeTable {
-    using ExecuteFn = void(*)(Cpu&);
-
-    constexpr OpcodeTable(std::initializer_list<ExecuteFn> instructions) {
-        std::copy(instructions.begin(), instructions.end(), &data[0]);
-    }
-
-    constexpr ExecuteFn operator[](size_t index) const {
-        return data[index];
-    }
-
-    std::array<ExecuteFn, 0xff> data;
-};
 
 template<uint8_t ... opcodes>
 constexpr OpcodeTable CreateOpcodeTableImpl(std::integer_sequence<uint8_t, opcodes...>) {
