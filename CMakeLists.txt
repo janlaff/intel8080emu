@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.18.4)
 project(intel8080emu)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 
 add_executable(intel8080emu src/main.cpp src/Opcodes.cpp src/Cpu.cpp src/MemoryBus.cpp)
