@@ -6,22 +6,6 @@
 
 #include "Opcodes.h"
 
-constexpr Reg8 ParseDestinationReg(uint8_t opcode) {
-    return static_cast<Reg8>((opcode & 0b00111000) >> 3);
-}
-
-constexpr Reg8 ParseSourceReg(uint8_t opcode) {
-    return static_cast<Reg8>(opcode & 0b00000111);
-}
-
-constexpr Reg16 ParseRegPair(uint8_t opcode) {
-    return static_cast<Reg16>((opcode & 0b00110000) >> 4);
-}
-
-constexpr JumpCondition ParseJumpCondition(uint8_t opcode) {
-    return static_cast<JumpCondition>((opcode & 0b00111000) >> 3);
-}
-
 constexpr bool BitMaskMatch(std::string_view bitMask, uint8_t opcode) {
     for (int i = 0; i < 8; ++i) {
         bool currentBitIsSet = opcode & (1 << (7 - i));
