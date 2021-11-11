@@ -8,8 +8,8 @@
 struct InvalidOpcode {};
 
 struct MovOpcode {
-    Reg8 srcReg;
     Reg8 dstReg;
+    Reg8 srcReg;
 };
 
 struct MviOpcode {

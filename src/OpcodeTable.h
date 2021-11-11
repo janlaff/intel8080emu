@@ -4,6 +4,7 @@
 
 #include "Opcodes.h"
 #include "BitMask.h"
+#include "MapMacros.h"
 
 struct OpcodeTable {
     using OpcodeImpl = void(*)(Cpu&);
@@ -25,16 +26,12 @@ constexpr decltype(auto) ResolveOpcode() {
     Reg8 dst = ParseDestinationReg(opcode);
     Reg16 dst16 = ParseRegPair(opcode);
 
-    if constexpr (BitMaskMatch("01DDDSSS", opcode))
-        return MovOpcode{src, dst};
-    else if constexpr (BitMaskMatch("00DDD110", opcode))
-        return MviOpcode{dst};
-    else if constexpr (BitMaskMatch("00RP0001", opcode))
-        return LxiOpcode{dst16};
-    else if constexpr (BitMaskMatch("00111010", opcode))
-        return LdaOpcode{};
-    else
-        return InvalidOpcode{};
+    MAP_BEGIN
+    MAP_ENTRY("01DDDSSS") MovOpcode{dst, src};
+    MAP_ENTRY("00DDD110") MviOpcode{dst};
+    MAP_ENTRY("00RP0001") LxiOpcode{dst16};
+    MAP_ENTRY("00111010") LdaOpcode{};
+    MAP_END
 }
 
 template<uint8_t opcode>
