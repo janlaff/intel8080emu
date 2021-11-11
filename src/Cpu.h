@@ -12,6 +12,9 @@ public:
     void SetRegister(Reg16 reg, uint16_t value);
 
     uint8_t LoadDataByte();
+    uint16_t LoadDataWord();
+
+    MemoryBus& GetMemoryBus();
 
 //private:
     uint8_t a;

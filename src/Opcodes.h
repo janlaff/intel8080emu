@@ -16,6 +16,14 @@ struct MviOpcode {
     Reg8 dstReg;
 };
 
+struct LxiOpcode {
+    Reg16 dstReg;
+};
+
+struct LdaOpcode {};
+
 void Execute(Cpu& cpu, InvalidOpcode opcode);
 void Execute(Cpu& cpu, MovOpcode opcode);
 void Execute(Cpu& cpu, MviOpcode opcode);
+void Execute(Cpu& cpu, LxiOpcode opcode);
+void Execute(Cpu& cpu, LdaOpcode opcode);

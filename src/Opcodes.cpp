@@ -13,3 +13,11 @@ void Execute(Cpu& cpu, MovOpcode opcode) {
 void Execute(Cpu& cpu, MviOpcode opcode) {
     cpu.SetRegister(opcode.dstReg, cpu.LoadDataByte());
 }
+
+void Execute(Cpu& cpu, LxiOpcode opcode) {
+    cpu.SetRegister(opcode.dstReg, cpu.LoadDataWord());
+}
+
+void Execute(Cpu& cpu, LdaOpcode opcode) {
+    cpu.SetRegister(Reg8::A, cpu.GetMemoryBus().Read(cpu.LoadDataWord()));
+}

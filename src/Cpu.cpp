@@ -72,3 +72,14 @@ void Cpu::SetRegister(Reg16 reg, uint16_t value) {
 uint8_t Cpu::LoadDataByte() {
     return memBus.Read(sp++);
 }
+
+uint16_t Cpu::LoadDataWord() {
+    uint8_t low = LoadDataByte();
+    uint8_t high = LoadDataByte();
+
+    return JoinBytes(high, low);
+}
+
+MemoryBus& Cpu::GetMemoryBus() {
+    return memBus;
+}

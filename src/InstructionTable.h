@@ -26,12 +26,16 @@ template<uint8_t opcode>
 constexpr decltype(auto) GenerateImplementationFor() {
     Reg8 src = ParseSourceReg(opcode);
     Reg8 dst = ParseDestinationReg(opcode);
-    Reg16 pair = ParseRegPair(opcode);
+    Reg16 dst16 = ParseRegPair(opcode);
 
     if constexpr (BitMaskMatch("01DDDSSS", opcode))
         return MovOpcode{src, dst};
     else if constexpr (BitMaskMatch("00DDD110", opcode))
         return MviOpcode{dst};
+    else if constexpr (BitMaskMatch("00RP0001", opcode))
+        return LxiOpcode{dst16};
+    else if constexpr (BitMaskMatch("00111010", opcode))
+        return LdaOpcode{};
     else
         return InvalidOpcode{};
 }
