@@ -1,6 +1,7 @@
 #pragma once
 
-#include "MemoryBus.h"
+#include <array>
+
 #include "OpcodeParsing.h"
 
 class Cpu {
@@ -14,7 +15,8 @@ public:
     uint8_t LoadDataByte();
     uint16_t LoadDataWord();
 
-    MemoryBus& GetMemoryBus();
+    void WriteMemory(uint16_t address, uint8_t value);
+    uint8_t ReadMemory(uint16_t address);
 
 //private:
     uint8_t a;
@@ -27,5 +29,5 @@ public:
     uint8_t l;
     uint16_t sp;
     uint16_t pc;
-    MemoryBus memBus;
+    std::array<uint8_t, 0xffff> memory;
 };

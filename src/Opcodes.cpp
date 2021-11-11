@@ -19,5 +19,5 @@ void Execute(Cpu& cpu, LxiOpcode opcode) {
 }
 
 void Execute(Cpu& cpu, LdaOpcode opcode) {
-    cpu.SetRegister(Reg8::A, cpu.GetMemoryBus().Read(cpu.LoadDataWord()));
+    cpu.SetRegister(Reg8::A, cpu.ReadMemory(cpu.LoadDataWord()));
 }

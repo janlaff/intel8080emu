@@ -3,4 +3,4 @@ project(intel8080emu)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(intel8080emu src/main.cpp src/Opcodes.cpp src/Cpu.cpp src/MemoryBus.cpp)
+add_executable(intel8080emu src/main.cpp src/Opcodes.cpp src/Cpu.cpp)
