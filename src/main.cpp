@@ -1,10 +1,10 @@
 #include "OpcodeTable.h"
 
 int main(int argc, char* argv[]) {
-    OpcodeTable opTable = CreateOpcodeTable();
     Cpu cpu{};
-    cpu.b = 42;
-    opTable[0x78](cpu);
 
-    return cpu.a;
+    cpu.SetRegister(Reg8::B, 42);
+    cpu.Execute(0x78);
+
+    return cpu.GetRegister(Reg8::A);
 }

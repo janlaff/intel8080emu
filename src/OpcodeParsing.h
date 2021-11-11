@@ -29,7 +29,7 @@ constexpr Reg8 ParseSourceReg(uint8_t opcode) {
     return static_cast<Reg8>(opcode & 0b00000111);
 }
 
-constexpr Reg16 ParseRegPair(uint8_t opcode) {
+constexpr Reg16 ParseDestinationReg16(uint8_t opcode) {
     return static_cast<Reg16>((opcode & 0b00110000) >> 4);
 }
 

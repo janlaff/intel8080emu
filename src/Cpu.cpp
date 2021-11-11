@@ -3,8 +3,11 @@
 
 #include "Cpu.h"
 #include "Opcodes.h"
+#include "OpcodeTable.h"
 
 using namespace std;
+
+static constexpr OpcodeTable OPCODE_IMPLEMENTATIONS = CreateOpcodeTable();
 
 uint16_t JoinBytes(uint8_t high, uint8_t low) {
     return uint16_t(high)<<8 | uint16_t(low);
@@ -86,4 +89,9 @@ void Cpu::WriteMemory(uint16_t address, uint8_t value) {
 
 uint8_t Cpu::ReadMemory(uint16_t address) {
     return memory[address];
+}
+
+void Cpu::Execute(uint8_t opcode) {
+    OPCODE_IMPLEMENTATIONS[opcode](*this);
+    ++pc;
 }

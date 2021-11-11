@@ -22,15 +22,16 @@ struct OpcodeTable {
 
 template<uint8_t opcode>
 constexpr decltype(auto) ResolveOpcode() {
-    Reg8 src = ParseSourceReg(opcode);
-    Reg8 dst = ParseDestinationReg(opcode);
-    Reg16 dst16 = ParseRegPair(opcode);
+    Reg8 sss = ParseSourceReg(opcode);
+    Reg8 ddd = ParseDestinationReg(opcode);
+    Reg16 rp = ParseDestinationReg16(opcode);
+    JumpCondition ccc = ParseJumpCondition(opcode);
 
-    RESOLVE_BEGIN
-    RESOLVE_ENTRY("01DDDSSS") MovOpcode{dst, src};
-    RESOLVE_ENTRY("00DDD110") MviOpcode{dst};
-    RESOLVE_ENTRY("00RP0001") LxiOpcode{dst16};
-    RESOLVE_ENTRY("00111010") LdaOpcode{};
+    RESOLVE_BEG
+    RESOLVE("01DDDSSS") MovOpcode{ddd, sss};
+    RESOLVE("00DDD110") MviOpcode{ddd};
+    RESOLVE("00RP0001") LxiOpcode{rp};
+    RESOLVE("00111010") LdaOpcode{};
     RESOLVE_END
 }
 
