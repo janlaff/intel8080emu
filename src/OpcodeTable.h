@@ -62,9 +62,10 @@ struct OpcodeTable {
 };
 
 template<uint8_t ... opcodes>
-constexpr auto CreateOpcodeTable(std::integer_sequence<uint8_t, opcodes...>) {
+constexpr OpcodeTable CreateOpcodeTableImpl(std::integer_sequence<uint8_t, opcodes...>) {
     return OpcodeTable{CreateOpcodeTableEntry<opcodes>()...};
 }
 
-constexpr auto ALL_OPCODES = std::make_integer_sequence<uint8_t, 0xff>{};
-constexpr auto INSTRUCTIONS = CreateOpcodeTable(ALL_OPCODES);
+constexpr OpcodeTable CreateOpcodeTable() {
+    return CreateOpcodeTableImpl(std::make_integer_sequence<uint8_t, 0xff>{});
+}
