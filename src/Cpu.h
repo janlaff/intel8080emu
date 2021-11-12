@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <array>
+
 #include "OpcodeParsing.h"
 
 class Cpu {
@@ -13,10 +16,15 @@ public:
     uint8_t LoadDataByte();
     uint16_t LoadDataWord();
 
-    void WriteMemory(uint16_t address, uint8_t value);
-    uint8_t ReadMemory(uint16_t address);
+    void WriteByte(uint16_t address, uint8_t value);
+    void WriteWord(uint16_t address, uint16_t value);
+    uint8_t ReadByte(uint16_t address);
+    uint16_t ReadWord(uint16_t address);
 
+    void Run();
+    void RunSingle();
     void Execute(uint8_t opcode);
+    void LoadRom(const std::string& filename);
 
 private:
     uint8_t a;
@@ -29,5 +37,5 @@ private:
     uint8_t l;
     uint16_t sp;
     uint16_t pc;
-    uint8_t memory[0xFFFF];
+    std::array<uint8_t, 0xffff> memory;
 };

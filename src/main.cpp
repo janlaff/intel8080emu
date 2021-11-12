@@ -2,9 +2,8 @@
 
 int main(int argc, char* argv[]) {
     Cpu cpu{};
+    cpu.LoadRom("roms/cpudiag.bin");
+    cpu.RunSingle();
 
-    cpu.SetRegister(Reg8::B, 42);
-    cpu.Execute(0x78);
-
-    return cpu.GetRegister(Reg8::A);
+    return 0;
 }

@@ -1,5 +1,7 @@
 #include <tuple>
 #include <stdexcept>
+#include <fstream>
+#include <vector>
 
 #include "Cpu.h"
 #include "Opcodes.h"
@@ -28,7 +30,7 @@ uint8_t Cpu::GetRegister(Reg8 reg) {
         case Reg8::E: return e;
         case Reg8::H: return h;
         case Reg8::L: return l;
-        case Reg8::M: return ReadMemory(GetRegister(Reg16::HL));
+        case Reg8::M: return ReadByte(GetRegister(Reg16::HL));
         case Reg8::A: return a;
     };
 
@@ -56,7 +58,8 @@ void Cpu::SetRegister(Reg8 reg, uint8_t value) {
         case Reg8::E: e = value;
         case Reg8::H: h = value;
         case Reg8::L: l = value;
-        case Reg8::M: WriteMemory(GetRegister(Reg16::HL), value);
+        case Reg8::M:
+            WriteByte(GetRegister(Reg16::HL), value);
         case Reg8::A: a = value;
     };
 }
@@ -73,7 +76,7 @@ void Cpu::SetRegister(Reg16 reg, uint16_t value) {
 }
 
 uint8_t Cpu::LoadDataByte() {
-    return ReadMemory(sp++);
+    return ReadByte(sp++);
 }
 
 uint16_t Cpu::LoadDataWord() {
@@ -83,15 +86,44 @@ uint16_t Cpu::LoadDataWord() {
     return JoinBytes(high, low);
 }
 
-void Cpu::WriteMemory(uint16_t address, uint8_t value) {
+void Cpu::WriteByte(uint16_t address, uint8_t value) {
     memory[address] = value;
 }
 
-uint8_t Cpu::ReadMemory(uint16_t address) {
+void Cpu::WriteWord(uint16_t address, uint16_t value) {
+    auto [high, low] = SplitBytes(value);
+    WriteByte(address, low);
+    WriteByte(address + 1, high);
+}
+
+uint8_t Cpu::ReadByte(uint16_t address) {
     return memory[address];
+}
+
+uint16_t Cpu::ReadWord(uint16_t address) {
+    return JoinBytes(
+        ReadByte(address + 1),
+        ReadByte(address)
+    );
+}
+
+void Cpu::RunSingle() {
+    Execute(ReadByte(pc));
 }
 
 void Cpu::Execute(uint8_t opcode) {
     OPCODE_IMPLEMENTATIONS[opcode](*this);
     ++pc;
+}
+
+void Cpu::LoadRom(const std::string& filename) {
+    std::ifstream ifs{filename, std::ios::binary};
+
+    std::copy(
+        std::istreambuf_iterator<char>(ifs),
+        std::istreambuf_iterator<char>(),
+        memory.begin()
+    );
+
+    pc = 0;
 }
