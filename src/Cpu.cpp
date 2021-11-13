@@ -22,8 +22,8 @@ pair<uint8_t, uint8_t> SplitBytes(uint16_t value) {
     };
 }
 
-uint8_t Cpu::GetRegister(Reg8 reg) {
-    switch (reg) {
+uint8_t Cpu::GetRegister(Reg8 which) const {
+    switch (which) {
         case Reg8::B: return b;
         case Reg8::C: return c;
         case Reg8::D: return d;
@@ -37,8 +37,8 @@ uint8_t Cpu::GetRegister(Reg8 reg) {
     throw logic_error("Unreachable code");
 }
 
-uint16_t Cpu::GetRegister(Reg16 reg) {
-    switch (reg) {
+uint16_t Cpu::GetRegister(Reg16 which) const {
+    switch (which) {
         case Reg16::BC: return JoinBytes(b, c);
         case Reg16::DE: return JoinBytes(d, e);
         case Reg16::HL: return JoinBytes(h, l);
@@ -50,8 +50,24 @@ uint16_t Cpu::GetRegister(Reg16 reg) {
     throw logic_error("Unreachable code");
 }
 
-void Cpu::SetRegister(Reg8 reg, uint8_t value) {
-    switch (reg) {
+uint8_t Cpu::ReadByte(uint16_t address) const {
+    return memory[address];
+}
+
+uint16_t Cpu::ReadWord(uint16_t address) const {
+    return JoinBytes(
+            ReadByte(address + 1),
+            ReadByte(address)
+    );
+}
+
+bool Cpu::GetFlag(Flag which) const {
+    auto flagBit = static_cast<uint8_t>(which);
+    return (flags >> flagBit) & 1;
+}
+
+void Cpu::SetRegister(Reg8 which, uint8_t value) {
+    switch (which) {
         case Reg8::B: b = value;
         case Reg8::C: c = value;
         case Reg8::D: d = value;
@@ -64,14 +80,34 @@ void Cpu::SetRegister(Reg8 reg, uint8_t value) {
     };
 }
 
-void Cpu::SetRegister(Reg16 reg, uint16_t value) {
-    switch (reg) {
+void Cpu::SetRegister(Reg16 which, uint16_t value) {
+    switch (which) {
         case Reg16::BC: tie(b, c) = SplitBytes(value);
         case Reg16::DE: tie(d, e) = SplitBytes(value);
         case Reg16::HL: tie(h, l) = SplitBytes(value);
         case Reg16::SP: sp = value;
         case Reg16::PC: pc = value;
         case Reg16::PSW: tie(a, flags) = SplitBytes(value);
+    }
+}
+
+void Cpu::WriteByte(uint16_t address, uint8_t value) {
+    memory[address] = value;
+}
+
+void Cpu::WriteWord(uint16_t address, uint16_t value) {
+    auto [high, low] = SplitBytes(value);
+    WriteByte(address, low);
+    WriteByte(address + 1, high);
+}
+
+void Cpu::SetFlag(Flag which, bool enabled) {
+    auto flagBit = static_cast<uint8_t>(which);
+
+    if (enabled) {
+        flags |= 1 << flagBit;
+    } else {
+        flags &= ~(1 << flagBit);
     }
 }
 
@@ -86,34 +122,13 @@ uint16_t Cpu::LoadDataWord() {
     return JoinBytes(high, low);
 }
 
-void Cpu::WriteByte(uint16_t address, uint8_t value) {
-    memory[address] = value;
-}
-
-void Cpu::WriteWord(uint16_t address, uint16_t value) {
-    auto [high, low] = SplitBytes(value);
-    WriteByte(address, low);
-    WriteByte(address + 1, high);
-}
-
-uint8_t Cpu::ReadByte(uint16_t address) {
-    return memory[address];
-}
-
-uint16_t Cpu::ReadWord(uint16_t address) {
-    return JoinBytes(
-        ReadByte(address + 1),
-        ReadByte(address)
-    );
-}
-
 void Cpu::RunSingle() {
     Execute(ReadByte(pc));
 }
 
 void Cpu::Execute(uint8_t opcode) {
-    OPCODE_IMPLEMENTATIONS[opcode](*this);
     ++pc;
+    OPCODE_IMPLEMENTATIONS[opcode](*this);
 }
 
 void Cpu::LoadRom(const std::string& filename) {

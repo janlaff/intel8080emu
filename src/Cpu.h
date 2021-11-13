@@ -5,21 +5,30 @@
 
 #include "OpcodeParsing.h"
 
+enum class Flag : uint8_t {
+    Sign = 7,
+    Zero = 6,
+    AuxCarry = 4,
+    Parity = 2,
+    Carry = 0
+};
+
 class Cpu {
 public:
-    uint8_t GetRegister(Reg8 reg);
-    uint16_t GetRegister(Reg16 reg);
+    uint8_t GetRegister(Reg8 which) const;
+    uint16_t GetRegister(Reg16 which) const;
+    uint8_t ReadByte(uint16_t address) const;
+    uint16_t ReadWord(uint16_t address) const;
+    bool GetFlag(Flag which) const;
 
-    void SetRegister(Reg8 reg, uint8_t value);
-    void SetRegister(Reg16 reg, uint16_t value);
+    void SetRegister(Reg8 which, uint8_t value);
+    void SetRegister(Reg16 which, uint16_t value);
+    void WriteByte(uint16_t address, uint8_t value);
+    void WriteWord(uint16_t address, uint16_t value);
+    void SetFlag(Flag which, bool enabled);
 
     uint8_t LoadDataByte();
     uint16_t LoadDataWord();
-
-    void WriteByte(uint16_t address, uint8_t value);
-    void WriteWord(uint16_t address, uint16_t value);
-    uint8_t ReadByte(uint16_t address);
-    uint16_t ReadWord(uint16_t address);
 
     void Run();
     void RunSingle();

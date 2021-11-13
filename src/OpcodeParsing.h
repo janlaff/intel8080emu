@@ -36,3 +36,8 @@ constexpr Reg16 ParseDestinationReg16(uint8_t opcode) {
 constexpr JumpCondition ParseJumpCondition(uint8_t opcode) {
     return static_cast<JumpCondition>((opcode & 0b00111000) >> 3);
 }
+
+constexpr uint8_t ParseVectorNum(uint8_t opcode) {
+    return (opcode & 0b00111000) >> 3;
+}
+

@@ -1,13 +1,13 @@
 #include <stdexcept>
-#include <sstream>
 
 #include "Opcodes.h"
+#include "Format.h"
 
 void Execute(Cpu& cpu, InvalidOpcode opcode) {
-    std::ostringstream ss;
-    ss << "Invalid opcode: ";
-    ss << std::hex << int(opcode.byte);
-    throw std::runtime_error(ss.str());
+    int pc = cpu.GetRegister(Reg16::PC) - 1;
+    throw std::runtime_error(
+        Format("Invalid opcode %02x at address %04x", opcode.byte, pc)
+    );
 }
 
 void Execute(Cpu& cpu, MovOpcode opcode) {
@@ -32,4 +32,12 @@ void Execute(Cpu& cpu, StaOpcode opcode) {
 
 void Execute(Cpu& cpu, LhldOpcode opcode) {
     cpu.SetRegister(Reg16::HL, cpu.ReadWord(cpu.LoadDataWord()));
+}
+
+void Execute(Cpu& cpu, ShldOpcode opcode) {
+    cpu.WriteWord(cpu.ReadWord(cpu.LoadDataWord()), cpu.GetRegister(Reg16::HL));
+}
+
+void Execute(Cpu& cpu, LdaxOpcode opcode) {
+    cpu.SetRegister(Reg8::A, cpu.ReadWord(cpu.GetRegister(opcode.srcReg)));
 }

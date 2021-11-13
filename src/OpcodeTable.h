@@ -4,7 +4,7 @@
 
 #include "Opcodes.h"
 #include "BitMask.h"
-#include "ResolveMacros.h"
+#include "Macros.h"
 
 struct OpcodeTable {
     using OpcodeImpl = void(*)(Cpu&);
@@ -25,6 +25,7 @@ constexpr decltype(auto) ResolveOpcode() {
     Reg8 sss = ParseSourceReg(opcode);
     Reg8 ddd = ParseDestinationReg(opcode);
     Reg16 rp = ParseDestinationReg16(opcode);
+    uint8_t nnn = ParseVectorNum(opcode);
     JumpCondition ccc = ParseJumpCondition(opcode);
 
     RESOLVE_BEG
@@ -32,6 +33,10 @@ constexpr decltype(auto) ResolveOpcode() {
     RESOLVE("00DDD110") MviOpcode{ddd};
     RESOLVE("00RP0001") LxiOpcode{rp};
     RESOLVE("00111010") LdaOpcode{};
+    RESOLVE("00110010") StaOpcode{};
+    RESOLVE("00101010") LhldOpcode{};
+    RESOLVE("00100010") ShldOpcode{};
+    RESOLVE("00RP1010") LdaxOpcode{};
     RESOLVE_END
 }
 
