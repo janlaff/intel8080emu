@@ -41,10 +41,7 @@ constexpr decltype(auto) ResolveOpcode() {
 
     RESOLVE("00101111") CmaOpcode{};
     RESOLVE("11000011") JmpOpcode{};
-    RESOLVE("0000X000") NopOpcode{};
-    RESOLVE("0001X000") NopOpcode{};
-    RESOLVE("0010X000") NopOpcode{};
-    RESOLVE("0011X000") NopOpcode{};
+    RESOLVE("00XXX000") NopOpcode{};
     RESOLVE_END
 }
 
