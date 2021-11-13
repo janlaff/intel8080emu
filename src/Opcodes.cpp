@@ -6,7 +6,7 @@
 void Execute(Cpu& cpu, InvalidOpcode opcode) {
     int pc = cpu.GetRegister(Reg16::PC) - 1;
     throw std::runtime_error(
-        Format("Invalid opcode %02x at address %04x", opcode.byte, pc)
+        Format("Invalid opcode 0x%02x at address 0x%04x", opcode.byte, pc)
     );
 }
 
@@ -40,4 +40,16 @@ void Execute(Cpu& cpu, ShldOpcode opcode) {
 
 void Execute(Cpu& cpu, LdaxOpcode opcode) {
     cpu.SetRegister(Reg8::A, cpu.ReadWord(cpu.GetRegister(opcode.srcReg)));
+}
+
+void Execute(Cpu& cpu, CmaOpcode opcode) {
+    cpu.SetRegister(Reg8::A, ~cpu.GetRegister(Reg8::A));
+}
+
+void Execute(Cpu& cpu, JmpOpcode opcode) {
+    cpu.SetRegister(Reg16::PC, cpu.LoadDataWord());
+}
+
+void Execute(Cpu& cpu, NopOpcode opcode) {
+    // No operation
 }

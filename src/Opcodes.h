@@ -16,6 +16,10 @@ DEFINE_OPCODE(Lhld,)
 DEFINE_OPCODE(Shld,)
 DEFINE_OPCODE(Ldax, Reg16 srcReg)
 
+DEFINE_OPCODE(Cma,)
+DEFINE_OPCODE(Jmp,)
+DEFINE_OPCODE(Nop,)
+
 /*struct MovOpcode { Reg8 dstReg; Reg8 srcReg; };
 struct MviOpcode { Reg8 dstReg; };
 struct LxiOpcode { Reg16 dstReg; };

@@ -3,7 +3,9 @@
 int main(int argc, char* argv[]) {
     Cpu cpu{};
     cpu.LoadRom("roms/cpudiag.bin");
-    cpu.RunSingle();
+
+    while (true)
+        cpu.ExecuteNextOpcode();
 
     return 0;
 }

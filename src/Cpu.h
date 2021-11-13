@@ -15,11 +15,11 @@ enum class Flag : uint8_t {
 
 class Cpu {
 public:
-    uint8_t GetRegister(Reg8 which) const;
-    uint16_t GetRegister(Reg16 which) const;
-    uint8_t ReadByte(uint16_t address) const;
-    uint16_t ReadWord(uint16_t address) const;
-    bool GetFlag(Flag which) const;
+    [[nodiscard]] uint8_t GetRegister(Reg8 which) const;
+    [[nodiscard]] uint16_t GetRegister(Reg16 which) const;
+    [[nodiscard]] uint8_t ReadByte(uint16_t address) const;
+    [[nodiscard]] uint16_t ReadWord(uint16_t address) const;
+    [[nodiscard]] bool GetFlag(Flag which) const;
 
     void SetRegister(Reg8 which, uint8_t value);
     void SetRegister(Reg16 which, uint16_t value);
@@ -30,8 +30,7 @@ public:
     uint8_t LoadDataByte();
     uint16_t LoadDataWord();
 
-    void Run();
-    void RunSingle();
+    void ExecuteNextOpcode();
     void Execute(uint8_t opcode);
     void LoadRom(const std::string& filename);
 

@@ -74,8 +74,7 @@ void Cpu::SetRegister(Reg8 which, uint8_t value) {
         case Reg8::E: e = value;
         case Reg8::H: h = value;
         case Reg8::L: l = value;
-        case Reg8::M:
-            WriteByte(GetRegister(Reg16::HL), value);
+        case Reg8::M: WriteByte(GetRegister(Reg16::HL), value);
         case Reg8::A: a = value;
     };
 }
@@ -122,7 +121,7 @@ uint16_t Cpu::LoadDataWord() {
     return JoinBytes(high, low);
 }
 
-void Cpu::RunSingle() {
+void Cpu::ExecuteNextOpcode() {
     Execute(ReadByte(pc));
 }
 
@@ -131,12 +130,12 @@ void Cpu::Execute(uint8_t opcode) {
     OPCODE_IMPLEMENTATIONS[opcode](*this);
 }
 
-void Cpu::LoadRom(const std::string& filename) {
-    std::ifstream ifs{filename, std::ios::binary};
+void Cpu::LoadRom(const string& filename) {
+    ifstream ifs{filename, ios::binary};
 
-    std::copy(
-        std::istreambuf_iterator<char>(ifs),
-        std::istreambuf_iterator<char>(),
+    copy(
+        istreambuf_iterator<char>(ifs),
+        istreambuf_iterator<char>(),
         memory.begin()
     );
 
