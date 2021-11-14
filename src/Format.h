@@ -6,7 +6,7 @@
 
 template<typename T>
 struct ArgFormatter {
-    static T&& Get(T&& value) {
+    static const T& Get(const T& value) {
         return value;
     }
 };
@@ -24,7 +24,7 @@ struct ArgFormatter<std::string> {
 std::string ArgFormatter<std::string>::copyOfCurrentArg {};
 
 template<typename ... Args>
-std::string Format(const std::string& fmt, Args&&... args) {
+std::string Format(const std::string& fmt, const Args&... args) {
     int resultSize = std::snprintf(nullptr, 0, fmt.c_str(), ArgFormatter<Args>::Get(args)...);
 
     std::vector<char> result(resultSize + 1);

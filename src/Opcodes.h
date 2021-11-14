@@ -8,7 +8,8 @@
 #include "Macros.h"
 
 template<typename T>
-struct Opcode {
+class Opcode {
+public:
     constexpr explicit Opcode(uint8_t opcode)
         : opcode{opcode}
         {}
@@ -33,6 +34,11 @@ struct Opcode {
         return ParseJumpCondition(opcode);
     }
 
+    uint8_t GetRaw() {
+        return opcode;
+    }
+
+private:
     uint8_t opcode;
 };
 

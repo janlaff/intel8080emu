@@ -7,7 +7,7 @@
 void Execute(Cpu& cpu, Opcode<INVALID> opcode) {
     int pc = cpu.GetRegister(Reg16::PC) - 1;
     throw std::runtime_error(
-        Format("Invalid opcode 0x%02x at address 0x%04x", opcode.opcode, pc)
+        Format("Invalid opcode 0x%02x at address 0x%04x", opcode.GetRaw(), pc)
     );
 }
 
