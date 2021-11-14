@@ -29,19 +29,15 @@ constexpr decltype(auto) ResolveOpcode() {
     JumpCondition ccc = ParseJumpCondition(opcode);
 
     RESOLVE_BEG
-    RESOLVE("01DDDSSS") MovOpcode{ddd, sss};
-    RESOLVE("00DDD110") MviOpcode{ddd};
-    RESOLVE("00RP0001") LxiOpcode{rp};
-    RESOLVE("00111010") LdaOpcode{};
-    RESOLVE("00110010") StaOpcode{};
-    RESOLVE("00101010") LhldOpcode{};
-    RESOLVE("00100010") ShldOpcode{};
-    RESOLVE("00RP1010") LdaxOpcode{};
-
-
-    RESOLVE("00101111") CmaOpcode{};
-    RESOLVE("11000011") JmpOpcode{};
-    RESOLVE("00XXX000") NopOpcode{};
+    RESOLVE("01DDDSSS", MOV)
+    RESOLVE("00DDD110", MVI)
+    RESOLVE("00RP0001", LXI)
+    RESOLVE("00111010", LDA)
+    RESOLVE("00110010", STA)
+    RESOLVE("00101010", LHLD)
+    RESOLVE("00100010", SHLD)
+    RESOLVE("00RP1010", LDAX)
+    RESOLVE("00XXX000", NOP)
     RESOLVE_END
 }
 
