@@ -42,9 +42,6 @@ private:
     uint8_t opcode;
 };
 
-template<typename T>
-void Execute(Cpu& cpu, T opcode);
-
 void Execute(Cpu& cpu, Opcode<struct INVALID> opcode);
 void Execute(Cpu& cpu, Opcode<struct MOV> opcode);
 void Execute(Cpu& cpu, Opcode<struct MVI> opcode);
