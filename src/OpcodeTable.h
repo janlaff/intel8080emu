@@ -22,12 +22,6 @@ struct OpcodeTable {
 
 template<uint8_t opcode>
 constexpr decltype(auto) ResolveOpcode() {
-    Reg8 sss = ParseSourceReg(opcode);
-    Reg8 ddd = ParseDestinationReg(opcode);
-    Reg16 rp = ParseDestinationReg16(opcode);
-    uint8_t nnn = ParseVectorNum(opcode);
-    JumpCondition ccc = ParseJumpCondition(opcode);
-
     RESOLVE_BEG
     RESOLVE("01DDDSSS", MOV)
     RESOLVE("00DDD110", MVI)
