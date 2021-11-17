@@ -2,8 +2,11 @@
 
 #include <string>
 #include <array>
+#include <vector>
 
 #include "EnumTypes.h"
+
+struct Opcode;
 
 class Cpu {
 public:
@@ -20,12 +23,15 @@ public:
     void SetFlag(Flag which, bool enabled);
     void UpdateFlags(uint16_t calculationResult);
 
-    uint8_t LoadDataByte();
-    uint16_t LoadDataWord();
+    uint8_t FetchDataByte(bool disasemblyMode = true);
+    uint16_t FetchDataWord(bool disasemblyMode = true);
 
-    void ExecuteNextOpcode();
-    void Execute(uint8_t opcode);
+    const Opcode& FetchNext();
+    void Execute(const Opcode& opcode);
+    std::string Disassemble(const Opcode& opcode);
+
     void LoadRom(const std::string& filename);
+    void LoadRom(const std::vector<uint8_t> rom);
 
 private:
     uint8_t a;

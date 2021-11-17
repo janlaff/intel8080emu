@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "EnumTypes.h"
+
 template<typename T>
 struct Argument {
     constexpr explicit Argument(const T& value)
@@ -30,6 +32,13 @@ std::string Format(const std::string& fmt, const Args&... args) {
 
     std::vector<char> result(resultSize + 1);
     std::snprintf(result.data(), result.size(), fmt.c_str(), Argument<Args>{args}.Get()...);
+    result.resize(std::max(result.size(), 1ul) - 1);
 
-    return  {result.begin(), result.end()};
+    return {result.begin(), result.end()};
 }
+
+bool Replace(std::string& str, const std::string& from, const std::string& to);
+
+std::string FormatEnum(Reg8 value);
+std::string FormatEnum(Reg16 value);
+std::string FormatEnum(JumpCondition value);

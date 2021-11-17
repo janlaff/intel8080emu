@@ -16,13 +16,14 @@ struct OpcodeParams {
 };
 
 struct OpcodeDefinition {
-    std::string_view name;
+    std::string_view label;
     std::string_view bitPattern;
     void(*execute)(Cpu&, OpcodeParams);
 };
 
 struct Opcode {
     void Execute(Cpu& cpu) const;
+    std::string disassemble(Cpu& cpu) const;
 
     OpcodeDefinition definition{};
     OpcodeParams params{};

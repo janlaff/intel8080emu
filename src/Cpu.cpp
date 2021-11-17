@@ -115,24 +115,28 @@ void Cpu::UpdateFlags(uint16_t calculationResult) {
     SetFlag(Flag::Carry, calculationResult > uint8_t(calculationResult));
 }
 
-uint8_t Cpu::LoadDataByte() {
-    return ReadByte(sp++);
+uint8_t Cpu::FetchDataByte(bool disassemblyMode) {
+    return ReadByte(disassemblyMode ? pc + 1 : ++pc);
 }
 
-uint16_t Cpu::LoadDataWord() {
-    uint8_t low = LoadDataByte();
-    uint8_t high = LoadDataByte();
+uint16_t Cpu::FetchDataWord(bool disassemblyMode) {
+    uint8_t low = ReadByte(disassemblyMode ? pc + 1 : ++pc);
+    uint8_t high = FetchDataByte(disassemblyMode ? pc + 2 : ++pc);
 
     return JoinBytes(high, low);
 }
 
-void Cpu::ExecuteNextOpcode() {
-    Execute(ReadByte(pc));
+const Opcode& Cpu::FetchNext() {
+    return opcodeTable.entries[ReadByte(pc)];
 }
 
-void Cpu::Execute(uint8_t opcode) {
+void Cpu::Execute(const Opcode& opcode) {
+    opcode.Execute(*this);
     ++pc;
-    opcodeTable.entries[opcode].Execute(*this);
+}
+
+std::string Cpu::Disassemble(const Opcode &opcode) {
+    return opcode.disassemble(*this);
 }
 
 void Cpu::LoadRom(const string& filename) {
@@ -144,5 +148,10 @@ void Cpu::LoadRom(const string& filename) {
         memory.begin()
     );
 
+    pc = 0;
+}
+
+void Cpu::LoadRom(const std::vector<uint8_t> rom) {
+    copy(rom.begin(), rom.end(), memory.begin());
     pc = 0;
 }
