@@ -2,9 +2,10 @@
 #include <stdexcept>
 #include <fstream>
 #include <vector>
+#include <bitset>
 
 #include "Cpu.h"
-#include "Opcodes.h"
+#include "OpcodeTypes.h"
 #include "OpcodeTable.h"
 
 using namespace std;
@@ -108,6 +109,14 @@ void Cpu::SetFlag(Flag which, bool enabled) {
     } else {
         flags &= ~(1 << flagBit);
     }
+}
+
+void Cpu::UpdateFlags(uint16_t calculationResult) {
+    SetFlag(Flag::Sign, calculationResult & 0x8000);
+    SetFlag(Flag::Zero, calculationResult == 0);
+    // SetFlag(Flag::AuxCarry, ?)
+    SetFlag(Flag::Parity, (std::bitset<8>(calculationResult).count() % 2) == 0);
+    SetFlag(Flag::Carry, calculationResult > uint8_t(calculationResult));
 }
 
 uint8_t Cpu::LoadDataByte() {

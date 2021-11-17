@@ -2,9 +2,8 @@
 
 #include <array>
 
-#include "Opcodes.h"
 #include "BitMask.h"
-#include "Macros.h"
+#include "OpcodeDecls.h"
 
 struct OpcodeTable {
     using OpcodeImpl = void(*)(Cpu&);
@@ -21,24 +20,22 @@ struct OpcodeTable {
 };
 
 template<uint8_t opcode>
-constexpr decltype(auto) ResolveOpcode() {
-    RESOLVE_BEG
-    RESOLVE("01DDDSSS", MOV)
-    RESOLVE("00DDD110", MVI)
-    RESOLVE("00RP0001", LXI)
-    RESOLVE("00111010", LDA)
-    RESOLVE("00110010", STA)
-    RESOLVE("00101010", LHLD)
-    RESOLVE("00100010", SHLD)
-    RESOLVE("00RP1010", LDAX)
-    RESOLVE("00XXX000", NOP)
-    RESOLVE_END
+constexpr OpcodeImpl ResolveOpcode() {
+    for (auto& opcodeDecl : OPCODE_DECLS) {
+        if (BitMaskMatch(opcodeDecl.bitPattern, opcode)) {
+            return { opcodeDecl, opcode };
+        }
+    }
+
+    // Should never happen since last entry of
+    // OPCODE_DECLS will match with every opcode
+    return {};
 }
 
 template<uint8_t opcode>
 constexpr OpcodeTable::OpcodeImpl CreateOpcodeEntry() {
     return [](Cpu& cpu) {
-        Execute(cpu, ResolveOpcode<opcode>());
+        ResolveOpcode<opcode>().Execute(cpu);
     };
 }
 

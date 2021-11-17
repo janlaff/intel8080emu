@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+static std::string currentStringCopy {};
+
 template<typename T>
 struct ArgFormatter {
     static const T& Get(const T& value) {
@@ -13,15 +15,11 @@ struct ArgFormatter {
 
 template<>
 struct ArgFormatter<std::string> {
-    static std::string copyOfCurrentArg;
-
     static const char* Get(const std::string& value) {
-        copyOfCurrentArg = value;
-        return copyOfCurrentArg.c_str();
+        currentStringCopy = value;
+        return currentStringCopy.c_str();
     }
 };
-
-std::string ArgFormatter<std::string>::copyOfCurrentArg {};
 
 template<typename ... Args>
 std::string Format(const std::string& fmt, const Args&... args) {

@@ -26,6 +26,7 @@ public:
     void WriteByte(uint16_t address, uint8_t value);
     void WriteWord(uint16_t address, uint16_t value);
     void SetFlag(Flag which, bool enabled);
+    void UpdateFlags(uint16_t calculationResult);
 
     uint8_t LoadDataByte();
     uint16_t LoadDataWord();
