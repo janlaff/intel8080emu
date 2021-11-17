@@ -5,8 +5,7 @@
 #include <bitset>
 
 #include "Cpu.h"
-#include "OpcodeTypes.h"
-#include "OpcodeTable.h"
+#include "Opcodes.h"
 
 using namespace std;
 

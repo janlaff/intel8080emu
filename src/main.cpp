@@ -1,4 +1,4 @@
-#include "OpcodeTable.h"
+#include "Cpu.h"
 
 int main(int argc, char* argv[]) {
     Cpu cpu{};
