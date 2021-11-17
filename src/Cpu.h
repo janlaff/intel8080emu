@@ -3,15 +3,7 @@
 #include <string>
 #include <array>
 
-#include "OpcodeParsing.h"
-
-enum class Flag : uint8_t {
-    Sign = 7,
-    Zero = 6,
-    AuxCarry = 4,
-    Parity = 2,
-    Carry = 0
-};
+#include "EnumTypes.h"
 
 class Cpu {
 public:

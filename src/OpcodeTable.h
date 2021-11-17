@@ -20,22 +20,23 @@ struct OpcodeTable {
 };
 
 template<uint8_t opcode>
-constexpr OpcodeImpl ResolveOpcode() {
+constexpr Opcode ResolveOpcode() {
     for (auto& opcodeDecl : OPCODE_DECLS) {
         if (BitMaskMatch(opcodeDecl.bitPattern, opcode)) {
-            return { opcodeDecl, opcode };
+            return { opcodeDecl, {opcode} };
         }
     }
 
     // Should never happen since last entry of
     // OPCODE_DECLS will match with every opcode
-    return {};
+    return { {}, {0x00} };
 }
 
 template<uint8_t opcode>
 constexpr OpcodeTable::OpcodeImpl CreateOpcodeEntry() {
     return [](Cpu& cpu) {
-        ResolveOpcode<opcode>().Execute(cpu);
+        auto result = ResolveOpcode<opcode>();
+        result.decl.impl(cpu, result.params);
     };
 }
 
