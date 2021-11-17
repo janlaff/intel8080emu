@@ -1,4 +1,4 @@
-#include "OpcodeTypes.h"
+#include "Opcode.h"
 
 Reg8 OpcodeParams::SSS() const {
     return static_cast<Reg8>(opcode & 0b00000111);
@@ -21,5 +21,5 @@ JumpCondition OpcodeParams::CCC() const {
 }
 
 void Opcode::Execute(Cpu &cpu) const {
-    decl.impl(cpu, params);
+    definition.execute(cpu, params);
 }

@@ -1,15 +1,12 @@
 #include <tuple>
 #include <stdexcept>
 #include <fstream>
-#include <vector>
 #include <bitset>
 
 #include "Cpu.h"
-#include "Opcodes.h"
+#include "OpcodeTable.h"
 
 using namespace std;
-
-static constexpr OpcodeTable opcodeTable = CreateOpcodeTable();
 
 uint16_t JoinBytes(uint8_t high, uint8_t low) {
     return uint16_t(high)<<8 | uint16_t(low);

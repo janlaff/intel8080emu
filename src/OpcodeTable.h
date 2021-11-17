@@ -1,10 +1,10 @@
 #pragma once
 
-#include <stdexcept>
-
-#include "OpcodeTypes.h"
 #include "Format.h"
 #include "BitMask.h"
+
+#include "Cpu.h"
+#include "Opcode.h"
 
 constexpr OpcodeDefinition opcodeDefinitions[] {
     {"MOV D,S", "01DDDSSS", [](Cpu& cpu, OpcodeParams params) {
@@ -80,29 +80,37 @@ constexpr OpcodeDefinition opcodeDefinitions[] {
     {"<INVALID>", "XXXXXXXX", [](Cpu& cpu, OpcodeParams params) {
         int pc = cpu.GetRegister(Reg16::PC) - 1;
         throw std::runtime_error(
-                Format("Invalid opcode 0x%02x at address 0x%04x", params.opcode, pc)
+            Format("Invalid opcode 0x%02x at address 0x%04x", params.opcode, pc)
         );
     }}
 };
 
-template<uint8_t opcode>
-constexpr Opcode ResolveOpcode() {
-    for (auto& definition : opcodeDefinitions) {
-        if (BitMaskMatch(definition.bitPattern, opcode)) {
-            return {definition, {opcode}};
+struct OpcodeTable {
+    Opcode entries[0xff];
+};
+
+namespace {
+    template<uint8_t opcode>
+    constexpr Opcode ResolveOpcode() {
+        for (auto &definition: opcodeDefinitions) {
+            if (BitMaskMatch(definition.bitPattern, opcode)) {
+                return {definition, {opcode}};
+            }
         }
+
+        // Should never happen since last entry of
+        // opcodeDefinitions will match with every opcode
+        throw std::logic_error("Failed to resolve opcode");
     }
 
-    // Should never happen since last entry of
-    // opcodeDefinitions will match with every opcode
-    throw std::logic_error("Failed to resolve opcode");
+    template<uint8_t ... opcodes>
+    constexpr OpcodeTable CreateOpcodeTableImpl(std::integer_sequence<uint8_t, opcodes...>) {
+        return OpcodeTable{ResolveOpcode<opcodes>()...};
+    }
+
+    constexpr OpcodeTable CreateOpcodeTable() {
+        return CreateOpcodeTableImpl(std::make_integer_sequence<uint8_t, 0xff>{});
+    }
 }
 
-template<uint8_t ... opcodes>
-constexpr OpcodeTable CreateOpcodeTableImpl(std::integer_sequence<uint8_t, opcodes...>) {
-    return OpcodeTable{ResolveOpcode<opcodes>()...};
-}
-
-constexpr OpcodeTable CreateOpcodeTable() {
-    return CreateOpcodeTableImpl(std::make_integer_sequence<uint8_t, 0xff>{});
-}
+static constexpr auto opcodeTable = CreateOpcodeTable();

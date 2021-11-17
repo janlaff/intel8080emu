@@ -18,16 +18,12 @@ struct OpcodeParams {
 struct OpcodeDefinition {
     std::string_view name;
     std::string_view bitPattern;
-    void(*impl)(Cpu&, OpcodeParams);
+    void(*execute)(Cpu&, OpcodeParams);
 };
 
 struct Opcode {
     void Execute(Cpu& cpu) const;
 
-    OpcodeDefinition decl{};
+    OpcodeDefinition definition{};
     OpcodeParams params{};
-};
-
-struct OpcodeTable {
-    Opcode entries[0xff];
 };
