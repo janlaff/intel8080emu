@@ -4,29 +4,32 @@
 #include <string>
 #include <vector>
 
-static std::string currentStringCopy {};
-
 template<typename T>
-struct ArgFormatter {
-    static const T& Get(const T& value) {
-        return value;
-    }
+struct Argument {
+    constexpr explicit Argument(const T& value)
+        : value(value) {}
+
+    const T& Get() {return value;}
+
+    const T& value;
 };
 
 template<>
-struct ArgFormatter<std::string> {
-    static const char* Get(const std::string& value) {
-        currentStringCopy = value;
-        return currentStringCopy.c_str();
-    }
+struct Argument<std::string> {
+    constexpr explicit Argument(const std::string& value)
+        : value(value) {}
+
+    const char* Get() {return value.c_str();}
+
+    const std::string& value;
 };
 
 template<typename ... Args>
 std::string Format(const std::string& fmt, const Args&... args) {
-    int resultSize = std::snprintf(nullptr, 0, fmt.c_str(), ArgFormatter<Args>::Get(args)...);
+    int resultSize = std::snprintf(nullptr, 0, fmt.c_str(), Argument<Args>{args}.Get()...);
 
     std::vector<char> result(resultSize + 1);
-    std::snprintf(result.data(), result.size(), fmt.c_str(), ArgFormatter<Args>::Get(args)...);
+    std::snprintf(result.data(), result.size(), fmt.c_str(), Argument<Args>{args}.Get()...);
 
     return  {result.begin(), result.end()};
 }
