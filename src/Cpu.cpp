@@ -10,7 +10,7 @@
 
 using namespace std;
 
-static constexpr OpcodeTable OPCODE_IMPLEMENTATIONS = CreateOpcodeTable();
+static constexpr OpcodeTable opcodeTable = CreateOpcodeTable();
 
 uint16_t JoinBytes(uint8_t high, uint8_t low) {
     return uint16_t(high)<<8 | uint16_t(low);
@@ -136,7 +136,7 @@ void Cpu::ExecuteNextOpcode() {
 
 void Cpu::Execute(uint8_t opcode) {
     ++pc;
-    OPCODE_IMPLEMENTATIONS[opcode](*this);
+    opcodeTable.entries[opcode].Execute(*this);
 }
 
 void Cpu::LoadRom(const string& filename) {

@@ -6,16 +6,16 @@
 #include "Cpu.h"
 
 struct OpcodeParams {
-    Reg8 SSS() const;
-    Reg8 DDD() const;
-    Reg16 RP() const;
-    uint8_t NNN() const;
-    JumpCondition CCC() const;
+    [[nodiscard]] Reg8 SSS() const;
+    [[nodiscard]] Reg8 DDD() const;
+    [[nodiscard]] Reg16 RP() const;
+    [[nodiscard]] uint8_t NNN() const;
+    [[nodiscard]] JumpCondition CCC() const;
 
     uint8_t opcode;
 };
 
-struct OpcodeDecl {
+struct OpcodeDefinition {
     std::string_view name;
     std::string_view bitPattern;
     void(*impl)(Cpu&, OpcodeParams);
@@ -24,6 +24,10 @@ struct OpcodeDecl {
 struct Opcode {
     void Execute(Cpu& cpu) const;
 
-    OpcodeDecl decl;
-    OpcodeParams params;
+    OpcodeDefinition decl{};
+    OpcodeParams params{};
+};
+
+struct OpcodeTable {
+    Opcode entries[0xff];
 };

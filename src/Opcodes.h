@@ -5,7 +5,7 @@
 #include "OpcodeTypes.h"
 #include "Format.h"
 
-constexpr OpcodeDecl OPCODE_DECLS[] {
+constexpr OpcodeDefinition opcodeDefinitions[] {
     {"MOV D,S", "01DDDSSS", [](Cpu& cpu, OpcodeParams params) {
         cpu.SetRegister(
             params.DDD(),
