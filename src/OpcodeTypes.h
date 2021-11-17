@@ -6,11 +6,11 @@
 #include "Cpu.h"
 
 struct OpcodeParams {
-    Reg8 SSS();
-    Reg8 DDD();
-    Reg16 RP();
-    uint8_t NNN();
-    JumpCondition CCC();
+    Reg8 SSS() const;
+    Reg8 DDD() const;
+    Reg16 RP() const;
+    uint8_t NNN() const;
+    JumpCondition CCC() const;
 
     uint8_t opcode;
 };
@@ -22,6 +22,8 @@ struct OpcodeDecl {
 };
 
 struct Opcode {
+    void Execute(Cpu& cpu) const;
+
     OpcodeDecl decl;
     OpcodeParams params;
 };

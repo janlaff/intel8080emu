@@ -35,8 +35,8 @@ constexpr Opcode ResolveOpcode() {
 template<uint8_t opcode>
 constexpr OpcodeTable::OpcodeImpl CreateOpcodeEntry() {
     return [](Cpu& cpu) {
-        auto result = ResolveOpcode<opcode>();
-        result.decl.impl(cpu, result.params);
+        constexpr auto opcodeImpl = ResolveOpcode<opcode>();
+        opcodeImpl.Execute(cpu);
     };
 }
 
