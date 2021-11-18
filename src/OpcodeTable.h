@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #include "Format.h"
 #include "BitMask.h"
 
@@ -104,10 +106,6 @@ constexpr OpcodeDefinition opcodeDefinitions[] {
     }}
 };
 
-struct OpcodeTable {
-    Opcode entries[0xff];
-};
-
 namespace {
     template<uint8_t opcode>
     constexpr Opcode ResolveOpcode() {
@@ -123,13 +121,13 @@ namespace {
     }
 
     template<uint8_t ... opcodes>
-    constexpr OpcodeTable CreateOpcodeTableImpl(std::integer_sequence<uint8_t, opcodes...>) {
-        return OpcodeTable{ResolveOpcode<opcodes>()...};
+    constexpr auto CreateOpcodeTableImpl(std::integer_sequence<uint8_t, opcodes...>) {
+        return std::array<Opcode, 0xff>{ResolveOpcode<opcodes>()...};
     }
 
-    constexpr OpcodeTable CreateOpcodeTable() {
+    constexpr auto CreateOpcodeTable() {
         return CreateOpcodeTableImpl(std::make_integer_sequence<uint8_t, 0xff>{});
     }
 }
 
-static constexpr auto opcodeTable = CreateOpcodeTable();
+static constexpr auto opcodes = CreateOpcodeTable();

@@ -119,7 +119,7 @@ uint16_t Cpu::FetchDataWord() {
 }
 
 const Opcode& Cpu::FetchNext() {
-    return opcodeTable.entries[ReadByte(pc++)];
+    return opcodes[ReadByte(pc++)];
 }
 
 void Cpu::Execute(const Opcode& opcode) {
