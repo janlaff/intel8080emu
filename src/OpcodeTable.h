@@ -67,12 +67,19 @@ constexpr OpcodeDefinition opcodeDefinitions[] {
         cpu.SetRegister(Reg16::DE, hl);
     }},
     {"ADD <SRC>", "10000SSS", [](Cpu& cpu, OpcodeParams params) {
-        uint8_t a = cpu.GetRegister(Reg8::A);
-        uint8_t x = cpu.GetRegister(params.SSS());
-        uint16_t result = a + x;
-
-        cpu.SetRegister(Reg8::A, result);
-        cpu.UpdateFlags(result);
+        cpu.SetRegister(
+            Reg8::A,
+            cpu.AddByte(
+                cpu.GetRegister(Reg8::A),
+                cpu.GetRegister(params.SSS())
+            )
+        );
+    }},
+    {"CPI <BYTE>", "11111110", [](Cpu& cpu, OpcodeParams params) {
+        cpu.CmpByte(
+            cpu.GetRegister(Reg8::A),
+            cpu.FetchDataByte()
+        );
     }},
     {"CMA", "00101111", [](Cpu& cpu, OpcodeParams params) {
         cpu.SetRegister(Reg8::A, ~cpu.GetRegister(Reg8::A));
@@ -80,10 +87,16 @@ constexpr OpcodeDefinition opcodeDefinitions[] {
     {"JMP <ADDR>", "11000011", [](Cpu& cpu, OpcodeParams params) {
         cpu.SetRegister(Reg16::PC, cpu.FetchDataWord());
     }},
+    {"JMP IF <FLAG> <ADDR>", "11CCC010", [](Cpu& cpu, OpcodeParams params) {
+        auto addr = cpu.FetchDataWord();
+        if (cpu.JumpConditionMet(params.CCC())) {
+            cpu.SetRegister(Reg16::PC, addr);
+        }
+    }},
     {"NOP", "00XXX000", [](Cpu& cpu, OpcodeParams params) {
         // No operation
     }},
-    {"INVALID <OPCODE>", "XXXXXXXX", [](Cpu& cpu, OpcodeParams params) {
+    {"<INVALID: <OPCODE>>", "XXXXXXXX", [](Cpu& cpu, OpcodeParams params) {
         int pc = cpu.GetRegister(Reg16::PC) - 1;
         throw std::runtime_error(
             Format("Invalid opcode 0x%02x at address 0x%04x", params.opcode, pc)
@@ -106,7 +119,7 @@ namespace {
 
         // Should never happen since last entry of
         // opcodeDefinitions will match with every opcode
-        throw std::logic_error("Failed to resolve opcode");
+        // throw std::logic_error("Failed to resolve opcode");
     }
 
     template<uint8_t ... opcodes>

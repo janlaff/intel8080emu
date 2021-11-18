@@ -107,14 +107,6 @@ void Cpu::SetFlag(Flag which, bool enabled) {
     }
 }
 
-void Cpu::UpdateFlags(uint16_t calculationResult) {
-    SetFlag(Flag::Sign, calculationResult & 0x8000);
-    SetFlag(Flag::Zero, calculationResult == 0);
-    // SetFlag(Flag::AuxCarry, ?)
-    SetFlag(Flag::Parity, (std::bitset<8>(calculationResult).count() % 2) == 0);
-    SetFlag(Flag::Carry, calculationResult > uint8_t(calculationResult));
-}
-
 uint8_t Cpu::FetchDataByte() {
     return ReadByte(pc++);
 }
@@ -156,4 +148,63 @@ void Cpu::LoadRom(const string& filename) {
 void Cpu::LoadRom(const std::vector<uint8_t> rom) {
     copy(rom.begin(), rom.end(), memory.begin());
     pc = 0;
+}
+
+uint8_t Cpu::AddByte(uint8_t left, uint8_t right) {
+    auto result = uint16_t(left) + uint16_t(right);
+
+    CheckSZPC(result);
+    SetFlag(Flag::AuxCarry, ((left & 0xf) + (right & 0xf)) > 0xf);
+
+    return result;
+}
+
+uint8_t Cpu::SubByte(uint8_t left, uint8_t right) {
+    return AddByte(left, (~right) + 1);
+}
+
+uint8_t Cpu::AndByte(uint8_t left, uint8_t right) {
+    auto result = left & right;
+    CheckSZPC(result);
+    return result;
+}
+
+uint8_t Cpu::OrByte(uint8_t left, uint8_t right) {
+    auto result = left | right;
+    CheckSZPC(result);
+    return result;
+}
+
+uint8_t Cpu::XorByte(uint8_t left, uint8_t right) {
+    auto result = left ^ right;
+    CheckSZPC(result);
+    return result;
+}
+
+void Cpu::CmpByte(uint8_t left, uint8_t right) {
+    auto result = left - right;
+    CheckSZPC(result);
+
+    if (right & 0x8000)
+        SetFlag(Flag::Carry, !GetFlag(Flag::Carry));
+}
+
+void Cpu::CheckSZPC(uint16_t value) {
+    SetFlag(Flag::Sign, value & 0x8000);
+    SetFlag(Flag::Zero, value == 0);
+    SetFlag(Flag::Parity, (std::bitset<8>(value).count() % 2) == 0);
+    SetFlag(Flag::Carry, value > 0xff);
+}
+
+bool Cpu::JumpConditionMet(JumpCondition condition) {
+    switch (condition) {
+        case JumpCondition::Carry: return GetFlag(Flag::Carry);
+        case JumpCondition::NoCarry: return !GetFlag(Flag::Carry);
+        case JumpCondition::Even: return GetFlag(Flag::Parity);
+        case JumpCondition::Odd: return !GetFlag(Flag::Parity);
+        case JumpCondition::Minus: return GetFlag(Flag::Sign);
+        case JumpCondition::Positive: return !GetFlag(Flag::Sign);
+        case JumpCondition::Zero: return GetFlag(Flag::Zero);
+        case JumpCondition::NonZero: return !GetFlag(Flag::Zero);
+    }
 }

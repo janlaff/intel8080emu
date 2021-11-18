@@ -8,7 +8,7 @@ int main(int argc, char* argv[]) {
     Cpu cpu{};
     cpu.LoadRom("roms/cpudiag.bin");
 
-    for (int i = 0; i < 10; ++i) {
+    while (true) {
         auto opcode = cpu.FetchNext();
 
         auto address = cpu.GetRegister(Reg16::PC) - 1;
