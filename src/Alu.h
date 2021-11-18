@@ -17,5 +17,6 @@ public:
     void SetFlag(Flag which, bool enabled);
     void CheckSZPC(uint16_t value);
 
+protected:
     uint8_t flags;
 };
