@@ -16,7 +16,7 @@ enum class JumpCondition : uint8_t {
     Odd,
     Even,
     Positive,
-    Minus
+    Negative
 };
 
 enum class Flag : uint8_t {

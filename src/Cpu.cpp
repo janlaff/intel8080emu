@@ -202,7 +202,7 @@ bool Cpu::JumpConditionMet(JumpCondition condition) {
         case JumpCondition::NoCarry: return !GetFlag(Flag::Carry);
         case JumpCondition::Even: return GetFlag(Flag::Parity);
         case JumpCondition::Odd: return !GetFlag(Flag::Parity);
-        case JumpCondition::Minus: return GetFlag(Flag::Sign);
+        case JumpCondition::Negative: return GetFlag(Flag::Sign);
         case JumpCondition::Positive: return !GetFlag(Flag::Sign);
         case JumpCondition::Zero: return GetFlag(Flag::Zero);
         case JumpCondition::NonZero: return !GetFlag(Flag::Zero);

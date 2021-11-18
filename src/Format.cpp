@@ -33,5 +33,14 @@ std::string FormatEnum(Reg16 value) {
 }
 
 std::string FormatEnum(JumpCondition value) {
-    // TODO
+    switch (value) {
+        case JumpCondition::Carry: return "CARRY";
+        case JumpCondition::NoCarry: return "NOT CARRY";
+        case JumpCondition::Even: return "EVEN";
+        case JumpCondition::Odd: return "ODD";
+        case JumpCondition::Negative: return "NEGATIVE";
+        case JumpCondition::Positive: return "POSITIVE";
+        case JumpCondition::Zero: return "ZERO";
+        case JumpCondition::NonZero: return "NOT ZERO";
+    }
 }

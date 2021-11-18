@@ -39,6 +39,7 @@ std::string Opcode::Disassemble(Cpu &cpu) const {
     Replace(label, "<WORD>", Format("<0x%04X>", nextWord));
     Replace(label, "<ADDR>", Format("$%04X", nextWord));
     Replace(label, "<RP>", FormatEnum(params.RP()));
+    Replace(label, "<FLAG>", FormatEnum(params.CCC()));
 
     return label;
 }
