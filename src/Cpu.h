@@ -23,8 +23,8 @@ public:
     void SetFlag(Flag which, bool enabled);
     void UpdateFlags(uint16_t calculationResult);
 
-    uint8_t FetchDataByte(bool disasemblyMode = true);
-    uint16_t FetchDataWord(bool disasemblyMode = true);
+    uint8_t FetchDataByte();
+    uint16_t FetchDataWord();
 
     const Opcode& FetchNext();
     void Execute(const Opcode& opcode);

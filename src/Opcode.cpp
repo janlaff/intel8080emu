@@ -25,16 +25,19 @@ void Opcode::Execute(Cpu &cpu) const {
     definition.execute(cpu, params);
 }
 
-std::string Opcode::disassemble(Cpu &cpu) const {
+std::string Opcode::Disassemble(Cpu &cpu) const {
     std::string label{definition.label};
 
+    uint8_t nextByte = cpu.FetchDataByte();
+    uint16_t nextWord = uint16_t(cpu.FetchDataByte())<<8 | uint16_t(nextByte);
+
     Replace(label, "<OPCODE>", Format("0x%02X", params.opcode));
-    Replace(label, "<A>", Format("$%04X", cpu.FetchDataWord(false)));
+    Replace(label, "<A>", Format("$%04X", nextWord));
     Replace(label, "<DST>", FormatEnum(params.DDD()));
     Replace(label, "<SRC>", FormatEnum(params.SSS()));
-    Replace(label, "<BYTE>", Format("<0x%02X>", cpu.FetchDataByte(false)));
-    Replace(label, "<WORD>", Format("<0x%04X>", cpu.FetchDataWord(false)));
-    Replace(label, "<ADDR>", Format("$%04X", cpu.FetchDataWord(false)));
+    Replace(label, "<BYTE>", Format("<0x%02X>", nextByte));
+    Replace(label, "<WORD>", Format("<0x%04X>", nextWord));
+    Replace(label, "<ADDR>", Format("$%04X", nextWord));
     Replace(label, "<RP>", FormatEnum(params.RP()));
 
     return label;

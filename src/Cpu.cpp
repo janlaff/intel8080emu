@@ -115,28 +115,30 @@ void Cpu::UpdateFlags(uint16_t calculationResult) {
     SetFlag(Flag::Carry, calculationResult > uint8_t(calculationResult));
 }
 
-uint8_t Cpu::FetchDataByte(bool disassemblyMode) {
-    return ReadByte(disassemblyMode ? pc + 1 : ++pc);
+uint8_t Cpu::FetchDataByte() {
+    return ReadByte(pc++);
 }
 
-uint16_t Cpu::FetchDataWord(bool disassemblyMode) {
-    uint8_t low = ReadByte(disassemblyMode ? pc + 1 : ++pc);
-    uint8_t high = FetchDataByte(disassemblyMode ? pc + 2 : ++pc);
+uint16_t Cpu::FetchDataWord() {
+    uint8_t low = FetchDataByte();
+    uint8_t high = FetchDataByte();
 
     return JoinBytes(high, low);
 }
 
 const Opcode& Cpu::FetchNext() {
-    return opcodeTable.entries[ReadByte(pc)];
+    return opcodeTable.entries[ReadByte(pc++)];
 }
 
 void Cpu::Execute(const Opcode& opcode) {
     opcode.Execute(*this);
-    ++pc;
 }
 
 std::string Cpu::Disassemble(const Opcode &opcode) {
-    return opcode.disassemble(*this);
+    auto savedPc = pc;
+    auto result = opcode.Disassemble(*this);
+    pc = savedPc;
+    return result;
 }
 
 void Cpu::LoadRom(const string& filename) {

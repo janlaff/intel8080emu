@@ -23,7 +23,7 @@ struct OpcodeDefinition {
 
 struct Opcode {
     void Execute(Cpu& cpu) const;
-    std::string disassemble(Cpu& cpu) const;
+    std::string Disassemble(Cpu& cpu) const;
 
     OpcodeDefinition definition{};
     OpcodeParams params{};
