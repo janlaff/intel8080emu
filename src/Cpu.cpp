@@ -65,25 +65,25 @@ bool Cpu::GetFlag(Flag which) const {
 
 void Cpu::SetRegister(Reg8 which, uint8_t value) {
     switch (which) {
-        case Reg8::B: b = value;
-        case Reg8::C: c = value;
-        case Reg8::D: d = value;
-        case Reg8::E: e = value;
-        case Reg8::H: h = value;
-        case Reg8::L: l = value;
-        case Reg8::M: WriteByte(GetRegister(Reg16::HL), value);
-        case Reg8::A: a = value;
+        case Reg8::B: b = value; break;
+        case Reg8::C: c = value; break;
+        case Reg8::D: d = value; break;
+        case Reg8::E: e = value; break;
+        case Reg8::H: h = value; break;
+        case Reg8::L: l = value; break;
+        case Reg8::M: WriteByte(GetRegister(Reg16::HL), value); break;
+        case Reg8::A: a = value; break;
     };
 }
 
 void Cpu::SetRegister(Reg16 which, uint16_t value) {
     switch (which) {
-        case Reg16::BC: tie(b, c) = SplitBytes(value);
-        case Reg16::DE: tie(d, e) = SplitBytes(value);
-        case Reg16::HL: tie(h, l) = SplitBytes(value);
-        case Reg16::SP: sp = value;
-        case Reg16::PC: pc = value;
-        case Reg16::PSW: tie(a, flags) = SplitBytes(value);
+        case Reg16::BC: tie(b, c) = SplitBytes(value); break;
+        case Reg16::DE: tie(d, e) = SplitBytes(value); break;
+        case Reg16::HL: tie(h, l) = SplitBytes(value); break;
+        case Reg16::SP: sp = value; break;
+        case Reg16::PC: pc = value; break;
+        case Reg16::PSW: tie(a, flags) = SplitBytes(value); break;
     }
 }
 
