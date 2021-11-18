@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "EnumTypes.h"
+#include "Alu.h"
 
 struct Opcode;
 
@@ -14,13 +15,11 @@ public:
     [[nodiscard]] uint16_t GetRegister(Reg16 which) const;
     [[nodiscard]] uint8_t ReadByte(uint16_t address) const;
     [[nodiscard]] uint16_t ReadWord(uint16_t address) const;
-    [[nodiscard]] bool GetFlag(Flag which) const;
 
     void SetRegister(Reg8 which, uint8_t value);
     void SetRegister(Reg16 which, uint16_t value);
     void WriteByte(uint16_t address, uint8_t value);
     void WriteWord(uint16_t address, uint16_t value);
-    void SetFlag(Flag which, bool enabled);
 
     uint8_t FetchDataByte();
     uint16_t FetchDataWord();
@@ -32,20 +31,12 @@ public:
     void LoadRom(const std::string& filename);
     void LoadRom(const std::vector<uint8_t> rom);
 
-    uint8_t AddByte(uint8_t left, uint8_t right);
-    uint8_t SubByte(uint8_t left, uint8_t right);
-    uint8_t AndByte(uint8_t left, uint8_t right);
-    uint8_t OrByte(uint8_t left, uint8_t right);
-    uint8_t XorByte(uint8_t left, uint8_t right);
-    void CmpByte(uint8_t left, uint8_t right);
-
     bool JumpConditionMet(JumpCondition condition);
+    Alu& GetAlu();
 
 private:
-    void CheckSZPC(uint16_t value);
-
+    Alu alu;
     uint8_t a;
-    uint8_t flags;
     uint8_t b;
     uint8_t c;
     uint8_t d;

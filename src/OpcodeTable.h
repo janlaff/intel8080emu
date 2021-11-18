@@ -71,14 +71,14 @@ constexpr OpcodeDefinition opcodeDefinitions[] {
     {"ADD <SRC>", "10000SSS", [](Cpu& cpu, OpcodeParams params) {
         cpu.SetRegister(
             Reg8::A,
-            cpu.AddByte(
+            cpu.GetAlu().Add(
                 cpu.GetRegister(Reg8::A),
                 cpu.GetRegister(params.SSS())
             )
         );
     }},
     {"CPI <BYTE>", "11111110", [](Cpu& cpu, OpcodeParams params) {
-        cpu.CmpByte(
+        cpu.GetAlu().Cmp(
             cpu.GetRegister(Reg8::A),
             cpu.FetchDataByte()
         );

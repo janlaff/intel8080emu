@@ -61,11 +61,11 @@ void Shell::PrintWelcome() {
 void Shell::PrintFlags() {
     auto flags = Format(
         "| S: %d | Z: %d | AC: %d | P: %d | C: %d |",
-        cpu->GetFlag(Flag::Sign),
-        cpu->GetFlag(Flag::Zero),
-        cpu->GetFlag(Flag::AuxCarry),
-        cpu->GetFlag(Flag::Parity),
-        cpu->GetFlag(Flag::Carry)
+        cpu->GetAlu().GetFlag(Flag::Sign),
+        cpu->GetAlu().GetFlag(Flag::Zero),
+        cpu->GetAlu().GetFlag(Flag::AuxCarry),
+        cpu->GetAlu().GetFlag(Flag::Parity),
+        cpu->GetAlu().GetFlag(Flag::Carry)
     );
 
     std::cout << flags << std::endl;

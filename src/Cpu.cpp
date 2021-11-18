@@ -41,7 +41,7 @@ uint16_t Cpu::GetRegister(Reg16 which) const {
         case Reg16::HL: return JoinBytes(h, l);
         case Reg16::SP: return sp;
         case Reg16::PC: return pc;
-        case Reg16::PSW: return JoinBytes(a, flags);
+        case Reg16::PSW: return JoinBytes(a, alu.flags);
     }
 
     throw logic_error("Unreachable code");
@@ -56,11 +56,6 @@ uint16_t Cpu::ReadWord(uint16_t address) const {
             ReadByte(address + 1),
             ReadByte(address)
     );
-}
-
-bool Cpu::GetFlag(Flag which) const {
-    auto flagBit = static_cast<uint8_t>(which);
-    return (flags >> flagBit) & 1;
 }
 
 void Cpu::SetRegister(Reg8 which, uint8_t value) {
@@ -83,7 +78,7 @@ void Cpu::SetRegister(Reg16 which, uint16_t value) {
         case Reg16::HL: tie(h, l) = SplitBytes(value); break;
         case Reg16::SP: sp = value; break;
         case Reg16::PC: pc = value; break;
-        case Reg16::PSW: tie(a, flags) = SplitBytes(value); break;
+        case Reg16::PSW: tie(a, alu.flags) = SplitBytes(value); break;
     }
 }
 
@@ -95,16 +90,6 @@ void Cpu::WriteWord(uint16_t address, uint16_t value) {
     auto [high, low] = SplitBytes(value);
     WriteByte(address, low);
     WriteByte(address + 1, high);
-}
-
-void Cpu::SetFlag(Flag which, bool enabled) {
-    auto flagBit = static_cast<uint8_t>(which);
-
-    if (enabled) {
-        flags |= 1 << flagBit;
-    } else {
-        flags &= ~(1 << flagBit);
-    }
 }
 
 uint8_t Cpu::FetchDataByte() {
@@ -150,61 +135,19 @@ void Cpu::LoadRom(const std::vector<uint8_t> rom) {
     pc = 0;
 }
 
-uint8_t Cpu::AddByte(uint8_t left, uint8_t right) {
-    auto result = uint16_t(left) + uint16_t(right);
-
-    CheckSZPC(result);
-    SetFlag(Flag::AuxCarry, ((left & 0xf) + (right & 0xf)) > 0xf);
-
-    return result;
-}
-
-uint8_t Cpu::SubByte(uint8_t left, uint8_t right) {
-    return AddByte(left, (~right) + 1);
-}
-
-uint8_t Cpu::AndByte(uint8_t left, uint8_t right) {
-    auto result = left & right;
-    CheckSZPC(result);
-    return result;
-}
-
-uint8_t Cpu::OrByte(uint8_t left, uint8_t right) {
-    auto result = left | right;
-    CheckSZPC(result);
-    return result;
-}
-
-uint8_t Cpu::XorByte(uint8_t left, uint8_t right) {
-    auto result = left ^ right;
-    CheckSZPC(result);
-    return result;
-}
-
-void Cpu::CmpByte(uint8_t left, uint8_t right) {
-    auto result = left - right;
-    CheckSZPC(result);
-
-    if (right & 0x8000)
-        SetFlag(Flag::Carry, !GetFlag(Flag::Carry));
-}
-
-void Cpu::CheckSZPC(uint16_t value) {
-    SetFlag(Flag::Sign, value & 0x8000);
-    SetFlag(Flag::Zero, value == 0);
-    SetFlag(Flag::Parity, (std::bitset<8>(value).count() % 2) == 0);
-    SetFlag(Flag::Carry, value > 0xff);
-}
-
 bool Cpu::JumpConditionMet(JumpCondition condition) {
     switch (condition) {
-        case JumpCondition::Carry: return GetFlag(Flag::Carry);
-        case JumpCondition::NoCarry: return !GetFlag(Flag::Carry);
-        case JumpCondition::Even: return GetFlag(Flag::Parity);
-        case JumpCondition::Odd: return !GetFlag(Flag::Parity);
-        case JumpCondition::Negative: return GetFlag(Flag::Sign);
-        case JumpCondition::Positive: return !GetFlag(Flag::Sign);
-        case JumpCondition::Zero: return GetFlag(Flag::Zero);
-        case JumpCondition::NonZero: return !GetFlag(Flag::Zero);
+        case JumpCondition::Carry: return alu.GetFlag(Flag::Carry);
+        case JumpCondition::NoCarry: return !alu.GetFlag(Flag::Carry);
+        case JumpCondition::Even: return alu.GetFlag(Flag::Parity);
+        case JumpCondition::Odd: return !alu.GetFlag(Flag::Parity);
+        case JumpCondition::Negative: return alu.GetFlag(Flag::Sign);
+        case JumpCondition::Positive: return !alu.GetFlag(Flag::Sign);
+        case JumpCondition::Zero: return alu.GetFlag(Flag::Zero);
+        case JumpCondition::NonZero: return !alu.GetFlag(Flag::Zero);
     }
+}
+
+Alu& Cpu::GetAlu() {
+    return alu;
 }
