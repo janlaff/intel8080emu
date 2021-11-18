@@ -9,9 +9,9 @@ int main(int argc, char* argv[]) {
     cpu.LoadRom("roms/cpudiag.bin");
 
     while (true) {
+        auto address = cpu.GetRegister(Reg16::PC);
         auto opcode = cpu.FetchNext();
-
-        auto address = cpu.GetRegister(Reg16::PC) - 1;
+        
         std::cout << Format("$%04X: %s", address, cpu.Disassemble(opcode)) << std::endl;
 
         cpu.Execute(opcode);

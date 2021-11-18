@@ -31,13 +31,12 @@ std::string Opcode::Disassemble(Cpu &cpu) const {
     uint8_t nextByte = cpu.FetchDataByte();
     uint16_t nextWord = uint16_t(cpu.FetchDataByte())<<8 | uint16_t(nextByte);
 
-    Replace(label, "<OPCODE>", Format("0x%02X", params.opcode));
-    Replace(label, "<A>", Format("$%04X", nextWord));
+    Replace(label, "<OPCODE>", Format("$%02X", params.opcode));
     Replace(label, "<DST>", FormatEnum(params.DDD()));
     Replace(label, "<SRC>", FormatEnum(params.SSS()));
-    Replace(label, "<BYTE>", Format("<0x%02X>", nextByte));
-    Replace(label, "<WORD>", Format("<0x%04X>", nextWord));
-    Replace(label, "<ADDR>", Format("$%04X", nextWord));
+    Replace(label, "<BYTE>", Format("$%02X", nextByte));
+    Replace(label, "<WORD>", Format("$%04X", nextWord));
+    Replace(label, "<ADDR>", Format("@%04X", nextWord));
     Replace(label, "<RP>", FormatEnum(params.RP()));
     Replace(label, "<FLAG>", FormatEnum(params.CCC()));
 
