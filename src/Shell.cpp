@@ -1,8 +1,10 @@
+#include <iostream>
+
 #include "Shell.h"
 #include "Opcode.h"
 #include "Format.h"
 
-#include <iostream>
+using namespace std;
 
 void Shell::Run() {
     ResetCpu();
@@ -12,18 +14,18 @@ void Shell::Run() {
     while (shouldRun) {
         Prompt();
         auto cmd = ReadCmd();
-        InterpretCmd(std::move(cmd));
+        InterpretCmd(move(cmd));
     }
 }
 
-std::string Shell::ReadCmd() {
-    std::string cmd{};
-    std::cin >> cmd;
+string Shell::ReadCmd() {
+    string cmd{};
+    cin >> cmd;
 
     return cmd;
 }
 
-void Shell::InterpretCmd(std::string cmd) {
+void Shell::InterpretCmd(string cmd) {
     if (cmd == "exit") {
         shouldRun = false;
     } else if (cmd == "step") {
@@ -31,7 +33,7 @@ void Shell::InterpretCmd(std::string cmd) {
         PrintOpcode(cpu->Disassemble(opcode));
         cpu->Execute(opcode);
     } else if (cmd == "pc") {
-        std::cout << Format("%04x", cpu->GetRegister(Reg16::PC)) << std::endl;
+        cout << Format("%04x", cpu->GetRegister(Reg16::PC)) << endl;
     } else if (cmd == "run") {
         while (true) {
             InterpretCmd("step");
@@ -49,13 +51,13 @@ void Shell::InterpretCmd(std::string cmd) {
     }
 }
 
-void Shell::PrintOpcode(std::string opcode) {
+void Shell::PrintOpcode(string opcode) {
     uint16_t pc = cpu->GetRegister(Reg16::PC) - 1;
-    std::cout << Format("%04x: %s", pc, opcode) << std::endl;
+    cout << Format("%04x: %s", pc, opcode) << endl;
 }
 
 void Shell::PrintWelcome() {
-    std::cout << "Welcome to the intel8080emu project by Jan Lafferton" << std::endl;
+    cout << "Welcome to the intel8080emu project by Jan Lafferton" << endl;
 }
 
 void Shell::PrintFlags() {
@@ -68,11 +70,11 @@ void Shell::PrintFlags() {
         cpu->GetFlag(Flag::Carry)
     );
 
-    std::cout << flags << std::endl;
+    cout << flags << endl;
 }
 
 void Shell::Prompt() {
-    std::cout << "> " << std::flush;
+    cout << "> " << flush;
 }
 
 void Shell::ResetCpu() {

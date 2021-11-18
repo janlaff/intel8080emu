@@ -1,14 +1,16 @@
 #include "Format.h"
 
-bool Replace(std::string& str, const std::string& from, const std::string& to) {
+using namespace std;
+
+bool Replace(string& str, const string& from, const string& to) {
     size_t start_pos = str.find(from);
-    if(start_pos == std::string::npos)
+    if(start_pos == string::npos)
         return false;
     str.replace(start_pos, from.length(), to);
     return true;
 }
 
-std::string FormatEnum(Reg8 value) {
+string FormatEnum(Reg8 value) {
     switch (value) {
         case Reg8::A: return "A";
         case Reg8::B: return "B";
@@ -21,7 +23,7 @@ std::string FormatEnum(Reg8 value) {
     }
 }
 
-std::string FormatEnum(Reg16 value) {
+string FormatEnum(Reg16 value) {
     switch (value) {
         case Reg16::PSW: return "PSW";
         case Reg16::BC: return "BC";
@@ -32,7 +34,7 @@ std::string FormatEnum(Reg16 value) {
     }
 }
 
-std::string FormatEnum(JumpCondition value) {
+string FormatEnum(JumpCondition value) {
     switch (value) {
         case JumpCondition::Carry: return "CARRY";
         case JumpCondition::NoCarry: return "NOT CARRY";

@@ -1,6 +1,8 @@
 #include "Opcode.h"
 #include "Format.h"
 
+using namespace std;
+
 Reg8 OpcodeParams::SSS() const {
     return static_cast<Reg8>(opcode & 0b00000111);
 }
@@ -26,7 +28,7 @@ void Opcode::Execute(Cpu &cpu) const {
 }
 
 std::string Opcode::Disassemble(Cpu &cpu) const {
-    std::string label{definition.label};
+    string label{definition.label};
 
     uint8_t nextByte = cpu.FetchDataByte();
     uint16_t nextWord = uint16_t(cpu.FetchDataByte())<<8 | uint16_t(nextByte);

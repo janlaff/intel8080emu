@@ -89,6 +89,7 @@ std::string Cpu::Disassemble(const Opcode &opcode) {
 
 void Cpu::LoadRom(const string& filename) {
     ifstream ifs{filename, ios::binary};
+    ifs.exceptions(ios::failbit);
 
     copy(
         istreambuf_iterator<char>(ifs),

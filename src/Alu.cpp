@@ -37,7 +37,7 @@ void Alu::Cmp(uint8_t left, uint8_t right) {
     auto result = left - right;
     CheckSZPC(result);
 
-    if (right & 0x8000)
+    if (right & 0x100)
         SetFlag(Flag::Carry, !GetFlag(Flag::Carry));
 }
 
