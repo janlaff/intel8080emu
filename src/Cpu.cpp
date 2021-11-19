@@ -61,6 +61,17 @@ void Cpu::SetRegister(Reg16 which, uint16_t value) {
     }
 }
 
+void Cpu::Push(uint16_t value) {
+    WriteWord(sp - 2, value);
+    sp -= 2;
+}
+
+uint16_t Cpu::Pop() {
+    auto ret = ReadWord(sp);
+    sp += 2;
+    return ret;
+}
+
 uint8_t Cpu::FetchDataByte() {
     return ReadByte(pc++);
 }

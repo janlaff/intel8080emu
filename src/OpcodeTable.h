@@ -77,6 +77,15 @@ constexpr OpcodeDefinition opcodeDefinitions[] {
             )
         );
     }},
+    {"ORA <SRC>", "10110SSS", [](Cpu& cpu, OpcodeParams params) {
+        cpu.SetRegister(
+            Reg8::A,
+            cpu.Or(
+                cpu.GetRegister(Reg8::A),
+                cpu.GetRegister(params.SSS())
+            )
+        );
+    }},
     {"CPI <BYTE>", "11111110", [](Cpu& cpu, OpcodeParams params) {
         cpu.Cmp(
             cpu.GetRegister(Reg8::A),
@@ -94,6 +103,13 @@ constexpr OpcodeDefinition opcodeDefinitions[] {
         if (cpu.JumpConditionMet(params.CCC())) {
             cpu.SetRegister(Reg16::PC, addr);
         }
+    }},
+    {"CALL <ADDR>", "11001101", [](Cpu& cpu, OpcodeParams params) {
+        auto callAddr = cpu.FetchDataWord();
+        auto retAddr = cpu.GetRegister(Reg16::PC);
+
+        cpu.Push(retAddr);
+        cpu.SetRegister(Reg16::PC, callAddr);
     }},
     {"NOP", "00XXX000", [](Cpu& cpu, OpcodeParams params) {
         // No operation

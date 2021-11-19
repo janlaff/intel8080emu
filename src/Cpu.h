@@ -18,6 +18,9 @@ public:
     void SetRegister(Reg8 which, uint8_t value);
     void SetRegister(Reg16 which, uint16_t value);
 
+    void Push(uint16_t value);
+    uint16_t Pop();
+
     uint8_t FetchDataByte();
     uint16_t FetchDataWord();
 
