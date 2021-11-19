@@ -7,6 +7,9 @@
 - https://altairclone.com/downloads/manuals/8080%20Programmers%20Manual.pdf
 
 ### TODO's:
+- Implement reset of opcodes
+- Display video memory onto screen
+- Improve debugging shell
 - Refactor shell commands into pattern
-- Add more shell commands tmo modify cpu state (registers, memory, flags, rom loading)
+- Add more shell commands to modify cpu state (registers, memory, flags, rom loading)
 - Debugging breakpoints (Use opcode 0x08 as break and fetch original instruction from cache)
