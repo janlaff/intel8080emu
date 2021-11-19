@@ -1,5 +1,8 @@
 # intel8080emu
 
+Simulates an Intel 8080 processor and provides an interactive debugging shell to inspect the cpu state and load and run programs.
+Currently only a limited set of instructions and minimal debugging functionality is supported.
+
 ### Links
 - http://dunfield.classiccmp.org/r/8080.txt
 - https://pastraiser.com/cpu/i8080/i8080_opcodes.html
