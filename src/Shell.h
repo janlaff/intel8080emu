@@ -1,5 +1,6 @@
 #pragma once
 
+#include <unordered_map>
 #include <memory>
 
 #include "Cpu.h"
@@ -19,4 +20,6 @@ private:
 
     std::unique_ptr<Cpu> cpu;
     bool shouldRun;
+
+    std::unordered_map<uint16_t, const Opcode&> breakPoints;
 };

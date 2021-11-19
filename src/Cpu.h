@@ -3,6 +3,7 @@
 #include <string>
 #include <array>
 #include <vector>
+#include <unordered_map>
 
 #include "EnumTypes.h"
 #include "Alu.h"
@@ -32,6 +33,8 @@ public:
     void LoadRom(const std::vector<uint8_t> rom);
 
     bool JumpConditionMet(JumpCondition condition);
+    void SetBreakPoint(uint16_t address);
+    const Opcode& GetOpcodeAtBreakPoint(uint16_t address);
 
 private:
     uint8_t a;
@@ -43,4 +46,5 @@ private:
     uint8_t l;
     uint16_t sp;
     uint16_t pc;
+    std::unordered_map<uint16_t, const Opcode&> breakPoints;
 };

@@ -7,8 +7,15 @@
 
 #include "Cpu.h"
 #include "Opcode.h"
+#include "BreakException.h"
 
 constexpr OpcodeDefinition opcodeDefinitions[] {
+    {"BREAK", "00001000", [](Cpu& cpu, OpcodeParams params) {
+        auto pcBeforeFetch = cpu.GetRegister(Reg16::PC) - 1;
+        cpu.SetRegister(Reg16::PC, pcBeforeFetch);
+
+        throw BreakException(pcBeforeFetch, cpu.GetOpcodeAtBreakPoint(pcBeforeFetch));
+    }},
     {"MOV <DST>,<SRC>", "01DDDSSS", [](Cpu& cpu, OpcodeParams params) {
         cpu.SetRegister(
             params.DDD(),

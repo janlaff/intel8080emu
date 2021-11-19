@@ -128,3 +128,16 @@ bool Cpu::JumpConditionMet(JumpCondition condition) {
         case JumpCondition::NonZero: return !GetFlag(Flag::Zero);
     }
 }
+
+void Cpu::SetBreakPoint(uint16_t address) {
+    const uint8_t BREAKPOINT_BYTE = 0x08;
+
+    auto affectedOpcode = ReadByte(address);
+    WriteByte(address, BREAKPOINT_BYTE);
+
+    breakPoints.insert({address, opcodes[affectedOpcode]});
+}
+
+const Opcode& Cpu::GetOpcodeAtBreakPoint(uint16_t address) {
+    return breakPoints.at(address);
+}

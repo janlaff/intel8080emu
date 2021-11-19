@@ -3,6 +3,7 @@
 #include "Shell.h"
 #include "Opcode.h"
 #include "Format.h"
+#include "BreakException.h"
 
 using namespace std;
 
@@ -35,12 +36,15 @@ void Shell::InterpretCmd(string cmd) {
     } else if (cmd == "pc") {
         cout << Format("%04x", cpu->GetRegister(Reg16::PC)) << endl;
     } else if (cmd == "run") {
-        while (true) {
-            InterpretCmd("step");
-
-            if (cpu->GetRegister(Reg16::PC) == 0) {
-                break;
+        try {
+            while (true) {
+                auto opcode = cpu->FetchNext();
+                cpu->Execute(opcode);
             }
+        } catch (BreakException& b) {
+            cout << Format("Reached breakpoint @%04x", b.address) << endl;
+            // Invalid displayed pc (pc -1)
+            PrintOpcode(cpu->Disassemble(b.opcode));
         }
     } else if (cmd == "load") {
         cpu->LoadRom("roms/cpudiag.bin");
@@ -48,6 +52,8 @@ void Shell::InterpretCmd(string cmd) {
         PrintFlags();
     } else if (cmd == "reset") {
         ResetCpu();
+    } else if (cmd == "break") {
+        cpu->SetBreakPoint(0x0689);
     }
 }
 
