@@ -59,6 +59,15 @@ void Alu::SetFlag(Flag which, bool enabled) {
 void Alu::CheckSZPC(uint16_t value) {
     SetFlag(Flag::Sign, value & 0x8000);
     SetFlag(Flag::Zero, value == 0);
-    SetFlag(Flag::Parity, (std::bitset<8>(value).count() % 2) == 0);
+    SetFlag(Flag::Parity, Parity(value));
     SetFlag(Flag::Carry, value > 0xff);
+}
+
+bool Alu::Parity(uint8_t value) {
+    int result = 0;
+    for (int bit = 0; bit < 7; ++bit) {
+        if (value & (1<<bit))
+            ++result;
+    }
+    return result % 2 == 0;
 }

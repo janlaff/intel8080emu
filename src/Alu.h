@@ -15,8 +15,10 @@ public:
 
     bool GetFlag(Flag which) const;
     void SetFlag(Flag which, bool enabled);
-    void CheckSZPC(uint16_t value);
 
 protected:
+    void CheckSZPC(uint16_t value);
+    bool Parity(uint8_t value);
+
     uint8_t flags;
 };
